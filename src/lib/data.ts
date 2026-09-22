@@ -171,12 +171,12 @@ export const videos = [
   },
   {
     code: "003",
-    title: "Pequenos mimos até R$30",
+    title: "Pequenos mimos para o seu setup",
     description: "Uma seleção de achadinhos para renovar os detalhes.",
     slugs: [
       "mousepad",
       "bonequinho-decorativo",
-      "organizador-de-cabos",
+      "luminaria-de-mesa",
       "fita-led",
     ],
   },
