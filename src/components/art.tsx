@@ -3,13 +3,13 @@ import Image from "next/image";
 export function ProductArt({ product }: { product: Product }) {
   if (product.image)
     return (
-      <div className="product-art">
+      <div className={"product-art " + product.color}>
         <Image
           src={product.image}
           alt={product.name}
           fill
           sizes="(max-width: 600px) 50vw, 320px"
-          style={{ objectFit: "contain" }}
+          style={{ objectFit: "contain", padding: "12px" }}
         />
       </div>
     );

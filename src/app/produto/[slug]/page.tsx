@@ -27,7 +27,11 @@ export default async function ProductPage({
       <section className="product-detail">
         <div className="detail-image">
           <ProductArt product={product} />
-          <span>Ilustração demonstrativa · imagem real em breve</span>
+          <span>
+            {product.image
+              ? "Imagem ilustrativa · confira a versão escolhida na loja"
+              : "Ilustração demonstrativa · imagem real em breve"}
+          </span>
         </div>
         <div className="detail-copy">
           <span className="pill">
