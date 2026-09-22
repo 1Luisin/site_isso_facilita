@@ -45,7 +45,7 @@ export default async function ProductPage({
             target="_blank"
             rel="sponsored noopener noreferrer"
           >
-            Ver na Shopee ↗
+            Ver produto ↗
           </a>
           <p className="micro">
             Preço fictício. Este botão abre a página inicial da Shopee; o link

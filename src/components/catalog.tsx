@@ -45,7 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
           target="_blank"
           rel="sponsored noopener noreferrer"
         >
-          Ver na Shopee <span>↗</span>
+          Ver produto <span>↗</span>
         </a>
       </div>
     </article>
