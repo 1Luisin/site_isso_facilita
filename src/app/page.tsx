@@ -1,15 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Catalog, ProductGrid } from "@/components/catalog";
 import { ProductArt } from "@/components/art";
 import {
-  products,
+  publishedProducts,
   categories,
-  collections,
-  videos,
+  publishedCollections,
+  publishedVideos,
   latestVideo,
   videoProducts,
 } from "@/lib/data";
 export default function Home() {
+  const lamp = publishedProducts.find(
+    (product) => product.slug === "luminaria-de-mesa",
+  );
+  const figurine = publishedProducts.find(
+    (product) => product.slug === "bonequinho-decorativo",
+  );
   return (
     <>
       <section className="hero">
@@ -34,11 +41,11 @@ export default function Home() {
           <span className="scribble">seu setup merece um mimo!</span>
           <div className="paper-photo">
             <div className="tape" />
-            <ProductArt product={products[0]} />
+            {lamp && <ProductArt product={lamp} />}
             <span>luz boa + cantinho favorito ♡</span>
           </div>
           <div className="mini-photo">
-            <ProductArt product={products[3]} />
+            {figurine && <ProductArt product={figurine} />}
             <span>fofura do dia ✿</span>
           </div>
           <span className="sticker">
@@ -86,29 +93,21 @@ export default function Home() {
           </div>
         </div>
         <div className="collections">
-          {collections.map((c, i) => (
+          {publishedCollections.map((c, i) => (
             <Link
-              href={
-                "/colecao/" +
-                [
-                  "setup-rosa",
-                  "setup-minimalista",
-                  "ate-30",
-                  "home-office-feminino",
-                ][i]
-              }
-              className={"collection collection-" + i}
-              key={c}
+              href={"/colecao/" + c.slug}
+              className={"collection collection-" + c.styleIndex}
+              key={c.slug}
             >
-              <span>{["♡", "☼", "✧", "✿"][i]}</span>
+              <span>{["♡", "☼", "✧", "✿"][c.styleIndex]}</span>
               <small>COLEÇÃO {String(i + 1).padStart(2, "0")}</small>
-              <h3>{c}</h3>
+              <h3>{c.name}</h3>
               <span className="collection-arrow">↗</span>
             </Link>
           ))}
         </div>
       </section>
-      <Catalog items={products} />
+      <Catalog items={publishedProducts} />
       <section id="videos" className="section">
         <div className="section-heading">
           <div>
@@ -116,15 +115,59 @@ export default function Home() {
             <h2>Encontre pelo vídeo</h2>
           </div>
         </div>
-        <div className="video-list">
-          {videos.map((v) => (
-            <Link href={"/v/" + v.code} key={v.code}>
-              <span className="video-code">▶ #{v.code}</span>
-              <h3>{v.title}</h3>
-              <p>
-                {v.slugs.length} achadinhos <span>↗</span>
-              </p>
-            </Link>
+        <div className="video-features">
+          {publishedVideos.map((v) => (
+            <article className="video-feature" key={v.code}>
+              {v.cover && (
+                <Link
+                  className="video-cover"
+                  href={"/v/" + v.code}
+                  aria-label={"Ver produtos do carrossel #" + v.code}
+                >
+                  <Image
+                    src={v.cover}
+                    alt="Setup bonito do zero sem gastar uma fortuna — capa do carrossel #001"
+                    width={1080}
+                    height={1350}
+                    sizes="(max-width: 580px) 90vw, 300px"
+                  />
+                </Link>
+              )}
+              <div className="video-feature-copy">
+                <span className="video-code">▶ #{v.code}</span>
+                <h3>{v.title}</h3>
+                <p>{v.description}</p>
+                <p className="muted">
+                  {videoProducts(v.slugs).length} achadinhos neste carrossel
+                </p>
+                <Link className="primary-button" href={"/v/" + v.code}>
+                  Ver produtos do carrossel ↗
+                </Link>
+                <div
+                  className="video-social-links"
+                  aria-label="Ver publicação original"
+                >
+                  {v.instagramUrl && (
+                    <a
+                      href={v.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ver no Instagram ↗
+                    </a>
+                  )}
+                  {v.tiktokUrl && (
+                    <a
+                      href={v.tiktokUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ver no TikTok ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </section>

@@ -25,6 +25,7 @@ export const categories = [
   },
 ];
 export type Product = {
+  published: boolean;
   slug: string;
   name: string;
   category: string;
@@ -42,9 +43,16 @@ export const collections = [
   "Achadinhos até R$30",
   "Home office feminino",
 ];
+// Coleções baseadas em preço ficam em rascunho até haver valores verificados.
+export const publishedCollections = [
+  { slug: "setup-rosa", name: "Setup rosa", styleIndex: 0 },
+  { slug: "setup-minimalista", name: "Setup minimalista", styleIndex: 1 },
+  { slug: "home-office-feminino", name: "Home office feminino", styleIndex: 3 },
+];
 export const products: Product[] = [
   {
     slug: "luminaria-de-mesa",
+    published: true,
     affiliateUrl: "https://s.shopee.com.br/20vXQYrNiT",
     name: "Luminária Hello Kitty",
     image: "/products/luminaria-de-mesa.png",
@@ -53,11 +61,12 @@ export const products: Product[] = [
     art: "lamp",
     color: "pink",
     description:
-      "Uma luz aconchegante para acompanhar suas leituras e deixar a mesa ainda mais charmosa.",
+      "Uma luminária decorativa da Hello Kitty para deixar o seu cantinho mais aconchegante.",
     collections: ["Setup rosa", "Home office feminino"],
   },
   {
     slug: "mousepad",
+    published: true,
     affiliateUrl: "https://s.shopee.com.br/5LBzOi4p9L",
     name: "Mousepad xadrez com flores",
     image: "/products/mousepad.png",
@@ -66,11 +75,12 @@ export const products: Product[] = [
     art: "mat",
     color: "peach",
     description:
-      "Um toque macio e delicado para o seu cantinho de trabalho ou estudo.",
+      "Mousepad com estampa xadrez e flores para dar um toque de cor à sua mesa.",
     collections: ["Setup rosa", "Achadinhos até R$30", "Home office feminino"],
   },
   {
     slug: "fita-led",
+    published: true,
     affiliateUrl: "https://s.shopee.com.br/20vXQWWKS1",
     name: "Fita LED RGB HiGooGoo com app e controle",
     image: "/products/fita-led.png",
@@ -84,19 +94,21 @@ export const products: Product[] = [
   },
   {
     slug: "bonequinho-decorativo",
+    published: true,
     affiliateUrl: "https://s.shopee.com.br/8Kpb1u6gr7",
-    name: "Bonequinho de blocos Kuromi",
+    name: "Bonequinho decorativo Kuromi",
     image: "/products/bonequinho-decorativo.png",
     category: "decoracao",
     price: 16.9,
     art: "bunny",
     color: "cream",
     description:
-      "Um pequeno companheiro de mesa para dar uma dose extra de fofura à rotina.",
+      "Bonequinho da Kuromi em estilo de blocos para decorar a mesa ou a estante.",
     collections: ["Setup rosa", "Achadinhos até R$30"],
   },
   {
     slug: "suporte-de-fone",
+    published: true,
     affiliateUrl: "https://s.shopee.com.br/1130EnJyH0",
     name: "Suporte para fone Hello Kitty",
     image: "/products/suporte-de-fone.png",
@@ -105,11 +117,12 @@ export const products: Product[] = [
     art: "headphone",
     color: "pink",
     description:
-      "Seu fone sempre à mão, com mais espaço livre e organização na mesa.",
+      "Suporte com visual da Hello Kitty para organizar seu fone e decorar a mesa. Confira os itens incluídos no anúncio.",
     collections: ["Setup minimalista", "Achadinhos até R$30"],
   },
   {
     slug: "organizador-de-cabos",
+    published: false,
     name: "Organizador de cabos",
     category: "utilidades",
     price: 12.9,
@@ -125,6 +138,7 @@ export const products: Product[] = [
   },
   {
     slug: "suporte-para-notebook",
+    published: false,
     name: "Suporte para notebook",
     category: "setup",
     price: 49.9,
@@ -136,6 +150,7 @@ export const products: Product[] = [
   },
   {
     slug: "hub-usb",
+    published: false,
     name: "Hub USB compacto",
     category: "eletronicos",
     price: 27.9,
@@ -152,6 +167,11 @@ export const products: Product[] = [
 export const videos = [
   {
     code: "001",
+    published: true,
+    cover: "/videos/carrossel-001.png",
+    instagramUrl: "https://www.instagram.com/p/Ddcj01vGOxd/?img_index=1",
+    tiktokUrl:
+      "https://www.tiktok.com/@issofacilita1/photo/7687007054258539783",
     title: "Um setup rosa para chamar de seu",
     description:
       "Os detalhes fofos do nosso primeiro carrossel, reunidos em um só lugar.",
@@ -165,12 +185,14 @@ export const videos = [
   },
   {
     code: "002",
+    published: false,
     title: "Mesa organizada, mente leve",
     description: "Pequenas facilidades para um home office mais gostoso.",
     slugs: ["organizador-de-cabos", "suporte-para-notebook", "hub-usb"],
   },
   {
     code: "003",
+    published: false,
     title: "Pequenos mimos para o seu setup",
     description: "Uma seleção de achadinhos para renovar os detalhes.",
     slugs: [
@@ -181,8 +203,25 @@ export const videos = [
     ],
   },
 ];
-export const latestVideo = videos[2];
+export const publishedProducts = products.filter(
+  (product) => product.published,
+);
+export const publishedVideos = videos.filter((video) => video.published);
+export const currentVideoCode = "001";
+export const latestVideo = (() => {
+  const video = publishedVideos.find(
+    (video) => video.code === currentVideoCode,
+  );
+  if (!video) {
+    throw new Error(
+      "O conteúdo atual precisa corresponder a um vídeo publicado.",
+    );
+  }
+  return video;
+})();
 export const money = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 export const videoProducts = (slugs: string[]) =>
-  slugs.map((slug) => products.find((p) => p.slug === slug)!).filter(Boolean);
+  slugs
+    .map((slug) => publishedProducts.find((product) => product.slug === slug))
+    .filter((product): product is Product => product !== undefined);

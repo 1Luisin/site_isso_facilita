@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { categories, products } from "@/lib/data";
+import { categories, publishedProducts } from "@/lib/data";
 import { Catalog } from "@/components/catalog";
 export const dynamicParams = false;
 export const generateStaticParams = () =>
@@ -23,7 +23,7 @@ export default async function CategoryPage({
         <h1>{category.name}</h1>
         <p>{category.description}</p>
       </div>
-      <Catalog items={products.filter((p) => p.category === slug)} />
+      <Catalog items={publishedProducts.filter((p) => p.category === slug)} />
     </div>
   );
 }

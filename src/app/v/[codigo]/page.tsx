@@ -1,17 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { videos, videoProducts } from "@/lib/data";
+import { publishedVideos, videoProducts } from "@/lib/data";
 import { ProductGrid } from "@/components/catalog";
 export const dynamicParams = false;
 export const generateStaticParams = () =>
-  videos.map((v) => ({ codigo: v.code }));
+  publishedVideos.map((v) => ({ codigo: v.code }));
 export default async function VideoPage({
   params,
 }: {
   params: Promise<{ codigo: string }>;
 }) {
   const { codigo } = await params;
-  const video = videos.find((v) => v.code === codigo);
+  const video = publishedVideos.find((v) => v.code === codigo);
   if (!video) notFound();
   return (
     <div className="page-wrap">
@@ -23,7 +23,7 @@ export default async function VideoPage({
         <h1>{video.title}</h1>
         <p>{video.description}</p>
         <small>
-          {video.slugs.length} achadinhos neste vídeo · seleção demonstrativa
+          {videoProducts(video.slugs).length} achadinhos neste vídeo
         </small>
       </div>
       <ProductGrid items={videoProducts(video.slugs)} />

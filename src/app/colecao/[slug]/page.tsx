@@ -1,23 +1,21 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { collections, products } from "@/lib/data";
+import { publishedCollections, publishedProducts } from "@/lib/data";
 import { ProductGrid } from "@/components/catalog";
-const slugs = [
-  "setup-rosa",
-  "setup-minimalista",
-  "ate-30",
-  "home-office-feminino",
-];
 export const dynamicParams = false;
-export const generateStaticParams = () => slugs.map((slug) => ({ slug }));
+export const generateStaticParams = () =>
+  publishedCollections.map(({ slug }) => ({ slug }));
 export default async function CollectionPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const title = collections[slugs.indexOf(slug)];
-  if (!title) notFound();
+  const collection = publishedCollections.find(
+    (collection) => collection.slug === slug,
+  );
+  if (!collection) notFound();
+  const title = collection.name;
   return (
     <div className="page-wrap">
       <Link className="back-link" href="/#colecoes">
@@ -29,7 +27,7 @@ export default async function CollectionPage({
         <p>Pequenas descobertas que combinam entre si — e com você.</p>
       </div>
       <ProductGrid
-        items={products.filter((p) => p.collections.includes(title))}
+        items={publishedProducts.filter((p) => p.collections.includes(title))}
       />
     </div>
   );

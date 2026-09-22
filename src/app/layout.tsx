@@ -44,16 +44,12 @@ export default function RootLayout({
               Isso Facilita! <span>✿</span>
             </Link>
             <p>Um detalhe fofo. Uma rotina mais leve.</p>
-            <Link href="/admin">Painel demonstrativo ↗</Link>
           </div>
           <p>
             Alguns links podem ser de afiliado e podemos receber comissão pela
             compra, sem custo adicional para você.
           </p>
-          <small>
-            © {new Date().getFullYear()} Isso Facilita! · Catálogo
-            demonstrativo com preços e produtos fictícios.
-          </small>
+          <small>© {new Date().getFullYear()} Isso Facilita!</small>
         </footer>
       </body>
     </html>

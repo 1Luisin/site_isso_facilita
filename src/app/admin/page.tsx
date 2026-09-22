@@ -1,5 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { products, videos, categories, money } from "@/lib/data";
+export const metadata: Metadata = {
+  title: "Painel demonstrativo",
+  robots: { index: false, follow: false },
+};
 export default function Admin() {
   return (
     <div className="page-wrap admin">
@@ -55,7 +60,11 @@ export default function Admin() {
               {products.map((p) => (
                 <tr key={p.slug}>
                   <td>
-                    <Link href={"/produto/" + p.slug}>{p.name} ↗</Link>
+                    {p.published ? (
+                      <Link href={"/produto/" + p.slug}>{p.name} ↗</Link>
+                    ) : (
+                      <span>{p.name} · Rascunho</span>
+                    )}
                   </td>
                   <td>{categories.find((c) => c.slug === p.category)?.name}</td>
                   <td>{money(p.price)}</td>
@@ -75,13 +84,15 @@ export default function Admin() {
       <section className="admin-panel">
         <h2>Vídeos</h2>
         <div className="video-list">
-          {videos.map((v) => (
-            <Link key={v.code} href={"/v/" + v.code}>
-              <span className="video-code">#{v.code}</span>
-              <h3>{v.title}</h3>
-              <p>{v.slugs.length} produtos ↗</p>
-            </Link>
-          ))}
+          {videos
+            .filter((v) => v.published)
+            .map((v) => (
+              <Link key={v.code} href={"/v/" + v.code}>
+                <span className="video-code">#{v.code}</span>
+                <h3>{v.title}</h3>
+                <p>{v.slugs.length} produtos ↗</p>
+              </Link>
+            ))}
         </div>
       </section>
       <section className="admin-panel">

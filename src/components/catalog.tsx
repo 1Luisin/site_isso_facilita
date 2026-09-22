@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { categories, collections, money, type Product } from "@/lib/data";
+import { categories, publishedCollections, type Product } from "@/lib/data";
 import { ProductArt } from "./art";
 export function ProductCard({ product }: { product: Product }) {
   const [favorite, setFavorite] = useState(false);
@@ -19,8 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
           aria-label={
             (favorite ? "Remover dos" : "Adicionar aos") +
             " favoritos: " +
-            product.name +
-            " (temporário)"
+            product.name
           }
           aria-pressed={favorite}
           onClick={() => setFavorite(!favorite)}
@@ -35,23 +34,31 @@ export function ProductCard({ product }: { product: Product }) {
         <h3>
           <Link href={"/produto/" + product.slug}>{product.name}</Link>
         </h3>
-        <p className="price">
-          <span>a partir de </span>
-          {money(product.price)}
-        </p>
         <a
           className="shop-button"
           href={product.affiliateUrl}
           target="_blank"
           rel="sponsored noopener noreferrer"
         >
-          Ver produto <span>↗</span>
+          Ver preço na loja <span>↗</span>
         </a>
       </div>
     </article>
   );
 }
 export function ProductGrid({ items }: { items: Product[] }) {
+  if (!items.length) {
+    return (
+      <div className="empty">
+        <span>✿</span>
+        <h3>Novos achadinhos em breve</h3>
+        <p>Enquanto isso, explore as outras seleções.</p>
+        <Link href="/#catalogo" className="text-link">
+          Ver todos os achadinhos ↗
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="product-grid">
       {items.map((p) => (
@@ -104,15 +111,17 @@ export function Catalog({ items }: { items: Product[] }) {
         >
           Todos os achadinhos
         </button>
-        {categories.map((c) => (
-          <button
-            key={c.slug}
-            className={category === c.slug ? "active" : ""}
-            onClick={() => setCategory(c.slug)}
-          >
-            {c.symbol} {c.name}
-          </button>
-        ))}
+        {categories
+          .filter((c) => items.some((p) => p.category === c.slug))
+          .map((c) => (
+            <button
+              key={c.slug}
+              className={category === c.slug ? "active" : ""}
+              onClick={() => setCategory(c.slug)}
+            >
+              {c.symbol} {c.name}
+            </button>
+          ))}
       </div>
       <div className="collection-filter">
         <label htmlFor="collection">Sua coleção:</label>
@@ -122,9 +131,13 @@ export function Catalog({ items }: { items: Product[] }) {
           onChange={(e) => setCollection(e.target.value)}
         >
           <option value="">Todas as coleções</option>
-          {collections.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
+          {publishedCollections
+            .filter((c) => items.some((p) => p.collections.includes(c.name)))
+            .map((c) => (
+              <option key={c.slug} value={c.name}>
+                {c.name}
+              </option>
+            ))}
         </select>
         {(query || category || collection) && (
           <button
@@ -145,14 +158,18 @@ export function Catalog({ items }: { items: Product[] }) {
         <div className="empty">
           <span>✿</span>
           <h3>Nenhum achadinho por aqui ainda</h3>
-          <p>Tente outra palavra ou limpe os filtros.</p>
+          <p>
+            {items.length
+              ? "Tente outra palavra ou limpe os filtros."
+              : "Novos achadinhos chegam em breve. Explore as outras seleções."}
+          </p>
+          {!items.length && (
+            <Link href="/#catalogo" className="text-link">
+              Ver todos os achadinhos ↗
+            </Link>
+          )}
         </div>
       )}
-      <p className="micro">
-        Preços e ilustrações demonstrativos. Os cinco produtos do carrossel #001
-        têm links de afiliado cadastrados; os demais ainda usam links de
-        exemplo. Favoritos ficam apenas nesta sessão da página.
-      </p>
     </section>
   );
 }
