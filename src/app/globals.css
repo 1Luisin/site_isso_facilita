@@ -122,10 +122,29 @@ button {
 }
 .header nav {
   display: flex;
-  gap: 30px;
+  flex-wrap: wrap;
+  gap: 12px;
   font-size: 13px;
 }
-.header nav a:hover,
+.header nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 19px;
+  border: 1px solid #e4bdca;
+  border-radius: 999px;
+  background: #faeaf0;
+  color: #8c4059;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+.header nav a:hover {
+  background: #f1d5df;
+  border-color: #bf748b;
+}
 .text-link:hover {
   text-decoration: underline;
 }
@@ -944,8 +963,11 @@ th {
     padding: 20px 24px;
   }
   .header nav {
-    gap: 18px;
+    gap: 8px;
     font-size: 12px;
+  }
+  .header nav a {
+    padding: 9px 13px;
   }
   .brand {
     font-size: 25px;
@@ -1051,7 +1073,7 @@ th {
   .header nav {
     justify-content: center;
     width: 100%;
-    gap: 32px;
+    gap: 8px;
     font-size: 12px;
   }
   .announcement {
