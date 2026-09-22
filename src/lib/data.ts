@@ -45,6 +45,7 @@ export const collections = [
 export const products: Product[] = [
   {
     slug: "luminaria-de-mesa",
+    affiliateUrl: "https://s.shopee.com.br/20vXQYrNiT",
     name: "Luminária de mesa candy",
     category: "decoracao",
     price: 39.9,
@@ -56,6 +57,7 @@ export const products: Product[] = [
   },
   {
     slug: "mousepad",
+    affiliateUrl: "https://s.shopee.com.br/5LBzOi4p9L",
     name: "Mousepad nuvem rosa",
     category: "setup",
     price: 24.9,
@@ -67,6 +69,7 @@ export const products: Product[] = [
   },
   {
     slug: "fita-led",
+    affiliateUrl: "https://s.shopee.com.br/20vXQWWKS1",
     name: "Fita LED para o seu setup",
     category: "eletronicos",
     price: 19.9,
@@ -78,6 +81,7 @@ export const products: Product[] = [
   },
   {
     slug: "bonequinho-decorativo",
+    affiliateUrl: "https://s.shopee.com.br/8Kpb1u6gr7",
     name: "Coelhinho de companhia",
     category: "decoracao",
     price: 16.9,
@@ -89,6 +93,7 @@ export const products: Product[] = [
   },
   {
     slug: "suporte-de-fone",
+    affiliateUrl: "https://s.shopee.com.br/1130EnJyH0",
     name: "Suporte para fone",
     category: "setup",
     price: 29.9,
@@ -135,7 +140,10 @@ export const products: Product[] = [
       "Mais conexões em um acessório compacto para acompanhar sua rotina.",
     collections: ["Setup minimalista", "Achadinhos até R$30"],
   },
-].map((p) => ({ ...p, affiliateUrl: "https://shopee.com.br/" }));
+].map((p) => ({
+  ...p,
+  affiliateUrl: p.affiliateUrl ?? "https://shopee.com.br/",
+}));
 export const videos = [
   {
     code: "001",

@@ -39,7 +39,7 @@ O build exporta o site estático em `out/`. Para produção, sirva essa pasta co
 - `src/app/layout.tsx`: header, navegação, metadados e aviso de afiliado.
 - `src/app/**/page.tsx`: páginas e geração estática das rotas.
 
-Para trocar ilustrações por fotos, coloque os arquivos em `public/products/` e defina `image: '/products/nome.jpg'` no produto. Atualize `affiliateUrl` com o link real e revise os preços antes de publicar. Todas as URLs atuais abrem apenas a página inicial da Shopee; os preços são fictícios e apresentados como “a partir de”.
+Para trocar ilustrações por fotos, coloque os arquivos em `public/products/` e defina `image: '/products/nome.jpg'` no produto. Atualize `affiliateUrl` com o link real e revise os preços antes de publicar. Os cinco produtos do carrossel `001` já têm os links de afiliado fornecidos pelo responsável cadastrados. Os outros três produtos ainda abrem a página inicial da Shopee. Preços, nomes específicos, descrições e ilustrações continuam demonstrativos e precisam ser conferidos com os anúncios reais.
 
 Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Cliques no admin são simulados; não existe rastreamento. O admin não permite editar dados e não contém informações privadas.
 

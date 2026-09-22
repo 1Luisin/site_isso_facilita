@@ -149,8 +149,9 @@ export function Catalog({ items }: { items: Product[] }) {
         </div>
       )}
       <p className="micro">
-        Preços fictícios para demonstração. Links levam à página inicial da
-        Shopee. Favoritos ficam apenas nesta sessão da página.
+        Preços e ilustrações demonstrativos. Os cinco produtos do carrossel #001
+        têm links de afiliado cadastrados; os demais ainda usam links de
+        exemplo. Favoritos ficam apenas nesta sessão da página.
       </p>
     </section>
   );

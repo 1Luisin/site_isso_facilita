@@ -48,9 +48,9 @@ export default async function ProductPage({
             Ver produto ↗
           </a>
           <p className="micro">
-            Preço fictício. Este botão abre a página inicial da Shopee; o link
-            específico será adicionado depois. Confira preço e disponibilidade
-            na loja.
+            {product.affiliateUrl === "https://shopee.com.br/"
+              ? "Preço fictício. Link demonstrativo: abre a página inicial da loja; o link específico será adicionado depois."
+              : "Preço fictício. O botão abre o link de afiliado do produto. Confira preço, opções e disponibilidade na loja."}
           </p>
           <div className="detail-note">
             ♡ Um detalhe para deixar sua rotina mais bonita.

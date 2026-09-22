@@ -60,7 +60,11 @@ export default function Admin() {
                   <td>{categories.find((c) => c.slug === p.category)?.name}</td>
                   <td>{money(p.price)}</td>
                   <td>
-                    <span className="status">Placeholder</span>
+                    <span className="status">
+                      {p.affiliateUrl === "https://shopee.com.br/"
+                        ? "Placeholder"
+                        : "Afiliado cadastrado"}
+                    </span>
                   </td>
                 </tr>
               ))}
