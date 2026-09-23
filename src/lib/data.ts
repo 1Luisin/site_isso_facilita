@@ -206,6 +206,9 @@ export const videos = [
 export const publishedProducts = products.filter(
   (product) => product.published,
 );
+export const categoriesWithPublishedProducts = categories.filter((category) =>
+  publishedProducts.some((product) => product.category === category.slug),
+);
 export const publishedVideos = videos.filter((video) => video.published);
 export const currentVideoCode = "001";
 export const latestVideo = (() => {

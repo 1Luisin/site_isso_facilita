@@ -10,7 +10,7 @@ import { Catalog, ProductGrid } from "@/components/catalog";
 import { ProductArt } from "@/components/art";
 import {
   publishedProducts,
-  categories,
+  categoriesWithPublishedProducts,
   publishedCollections,
   publishedVideos,
   latestVideo,
@@ -62,13 +62,7 @@ export default function Home() {
         </div>
       </section>
       <div className="category-strip">
-        {categories
-          .filter((category) =>
-            publishedProducts.some(
-              (product) => product.category === category.slug,
-            ),
-          )
-          .map((c) => (
+        {categoriesWithPublishedProducts.map((c) => (
             <Link href={"/categoria/" + c.slug} key={c.slug}>
               <span>{c.symbol}</span>
               <div>

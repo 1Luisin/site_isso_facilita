@@ -1,6 +1,6 @@
 # Isso Facilita!
 
-MVP estático em Next.js App Router + TypeScript, com CSS global e ilustrações SVG próprias. Sem backend ou banco de dados.
+Catálogo estático em Next.js App Router + TypeScript, com CSS global e imagens otimizadas. Sem backend ou banco de dados. Publicados atualmente: carrossel #001 e seus cinco produtos. Os demais produtos e vídeos #002/#003 são rascunhos internos, ausentes do catálogo e das páginas públicas de produtos/vídeos.
 
 ## Executar
 
@@ -25,7 +25,7 @@ O build exporta o site estático em `out/`. Para produção, sirva essa pasta co
 
 ## Configuração da URL pública
 
-Copie `.env.example` para `.env.local` ou configure `NEXT_PUBLIC_SITE_URL` no ambiente de build. Sem valor, `npm run dev` usa `http://localhost:3000`. Para `npm run build`, a variável é obrigatória e deve conter a origem HTTPS pública real, sem caminho, query ou fragmento; localhost é rejeitado em produção. Nenhum domínio definitivo está cadastrado.
+A URL usa, nesta ordem: `NEXT_PUBLIC_SITE_URL` explícita; `https://` + `VERCEL_PROJECT_PRODUCTION_URL` fornecida pela Vercel; `http://localhost:3000` somente em desenvolvimento. Sem URL no build de produção, ocorre erro. A origem deve ser HTTPS em produção, sem credenciais, caminho, query ou fragmento; localhost é rejeitado. `VERCEL_URL` não é utilizada. Um futuro domínio próprio em `NEXT_PUBLIC_SITE_URL` terá prioridade completa. Nenhum domínio definitivo está cadastrado.
 
 Essa URL determina canonical, sitemap, robots e URLs das imagens sociais. Ao definir ou trocar o domínio, execute o build novamente. O exemplo de build acima usa uma origem reservada sob `example.com` exclusivamente para validação: não é o endereço público e essa saída não deve ser usada no deploy. O domínio real será definido apenas na etapa de deploy.
 
@@ -44,21 +44,29 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 - `/`: catálogo, busca, filtros e seleções.
 - `/produto/[slug]`: detalhes de cada produto.
 - `/categoria/[slug]`: categoria com busca e filtros.
-- `/v/[codigo]`: produtos de um vídeo (`001`, `002`, `003`).
+- `/v/[codigo]`: produtos do conteúdo publicado `001`.
 - `/colecao/[slug]`: coleções navegáveis.
-- `/admin`: painel público demonstrativo, com produtos, vídeos e cliques fictícios.
+- `/admin`: painel demonstrativo sem autenticação, fora da navegação e do sitemap, com noindex/nofollow e bloqueio no robots.
 
 ## Onde editar
 
-- `src/lib/data.ts`: fonte central dos 8 produtos, 4 categorias, 4 coleções e 3 vídeos. O último vídeo é definido em `latestVideo`.
+- `src/lib/data.ts`: dados publicados e rascunhos; `publishedProducts`, `publishedVideos` e `publishedCollections` controlam a seleção pública. `categoriesWithPublishedProducts` filtra categorias da Home e do sitemap; categorias vazias continuam com rota própria.
 - `src/components/art.tsx`: ilustrações próprias usadas como placeholders.
 - `src/components/catalog.tsx`: cards, busca, filtros e favoritos temporários.
 - `src/app/globals.css`: cores, tipografia, layout e responsividade.
 - `src/app/layout.tsx`: header, navegação, metadados e aviso de afiliado.
 - `src/app/**/page.tsx`: páginas e geração estática das rotas.
 
-Para trocar ilustrações por fotos, coloque os arquivos em `public/products/` e defina `image: '/products/nome.jpg'` no produto. Atualize `affiliateUrl` com o link real e revise os preços antes de publicar. Os cinco produtos do carrossel `001` já têm os links de afiliado fornecidos pelo responsável cadastrados. Os outros três produtos ainda abrem a página inicial da Shopee. Preços, nomes específicos, descrições e ilustrações continuam demonstrativos e precisam ser conferidos com os anúncios reais.
+Os cinco produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
 
 Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Cliques no admin são simulados; não existe rastreamento. O admin não permite editar dados e não contém informações privadas.
 
 Nenhum backend, banco, autenticação, analytics ou redirecionamento `/go` foi implementado. Não publicar dados sensíveis no painel público.
+
+## Primeiro deploy manual na Vercel
+
+Importe `1Luisin/site_isso_facilita` pelo dashboard, com Framework Preset **Next.js**, raiz do repositório e Node **24.x**. Preserve os comandos/diretório de saída detectados automaticamente; não é necessário `vercel.json`. A Vercel gerencia os patches da série 24; `.nvmrc` continua fixando 24.14.1 localmente e no CI.
+
+Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. No primeiro deploy, deixe `NEXT_PUBLIC_SITE_URL` sem cadastro: a URL estável de produção será fornecida pela Vercel. Não copie a URL de validação do CI para a Vercel. Faça o deploy manualmente e copie o domínio de produção `.vercel.app`.
+
+Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. O admin permanece fora da navegação e do sitemap. Domínio próprio e analytics ficam para etapas posteriores.

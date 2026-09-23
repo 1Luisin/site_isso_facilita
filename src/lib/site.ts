@@ -2,12 +2,20 @@ import type { Metadata } from "next";
 
 function resolveSiteUrl(): URL {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (!configured && process.env.NODE_ENV !== "development") {
+  // Vercel supplies the stable production hostname, also in preview builds.
+  const vercelProduction = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  const origin = configured || (vercelProduction ? `https://${vercelProduction}` : undefined);
+  if (!origin && process.env.NODE_ENV !== "development") {
     throw new Error(
-      "Defina NEXT_PUBLIC_SITE_URL com a URL pública real antes de gerar o site para produção.",
+      "Defina NEXT_PUBLIC_SITE_URL ou habilite VERCEL_PROJECT_PRODUCTION_URL na Vercel antes de gerar o site para produção.",
     );
   }
-  const url = new URL(configured || "http://localhost:3000");
+  let url: URL;
+  try {
+    url = new URL(origin || "http://localhost:3000");
+  } catch {
+    throw new Error("URL pública inválida. Revise NEXT_PUBLIC_SITE_URL ou VERCEL_PROJECT_PRODUCTION_URL.");
+  }
   if (
     !["http:", "https:"].includes(url.protocol) ||
     url.username ||
@@ -17,7 +25,7 @@ function resolveSiteUrl(): URL {
     url.pathname !== "/"
   ) {
     throw new Error(
-      "NEXT_PUBLIC_SITE_URL deve ser uma origem HTTP(S), sem caminho, credenciais, query ou fragmento.",
+      "A URL pública deve ser uma origem HTTP(S), sem caminho, credenciais, query ou fragmento.",
     );
   }
   if (
@@ -27,7 +35,7 @@ function resolveSiteUrl(): URL {
       url.hostname.endsWith(".localhost"))
   ) {
     throw new Error(
-      "NEXT_PUBLIC_SITE_URL de produção deve usar HTTPS e não pode apontar para localhost.",
+      "A URL pública de produção deve usar HTTPS e não pode apontar para localhost.",
     );
   }
   return url;
