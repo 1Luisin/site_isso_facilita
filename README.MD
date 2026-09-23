@@ -25,9 +25,9 @@ O build exporta o site estático em `out/`. Para produção, sirva essa pasta co
 
 ## Configuração da URL pública
 
-A URL usa, nesta ordem: `NEXT_PUBLIC_SITE_URL` explícita; `https://` + `VERCEL_PROJECT_PRODUCTION_URL` fornecida pela Vercel; `http://localhost:3000` somente em desenvolvimento. Sem URL no build de produção, ocorre erro. A origem deve ser HTTPS em produção, sem credenciais, caminho, query ou fragmento; localhost é rejeitado. `VERCEL_URL` não é utilizada. Um futuro domínio próprio em `NEXT_PUBLIC_SITE_URL` terá prioridade completa. Nenhum domínio definitivo está cadastrado.
+A URL usa, nesta ordem: `NEXT_PUBLIC_SITE_URL` explícita; `https://` + `VERCEL_PROJECT_PRODUCTION_URL` fornecida pela Vercel; `http://localhost:3000` somente em desenvolvimento. Sem URL no build de produção, ocorre erro. A origem deve ser HTTPS em produção, sem credenciais, caminho, query ou fragmento; localhost é rejeitado. `VERCEL_URL` não é utilizada. O domínio oficial adquirido é **issofacilita.app.br**. Na produção, configure `NEXT_PUBLIC_SITE_URL=https://issofacilita.app.br`, com prioridade total sobre o fallback da Vercel. O DNS é configurado externamente via Registro.br/Vercel; o endereço `.vercel.app` permanece como endereço técnico da hospedagem. Nenhum domínio é fixado no código da aplicação.
 
-Essa URL determina canonical, sitemap, robots e URLs das imagens sociais. Ao definir ou trocar o domínio, execute o build novamente. O exemplo de build acima usa uma origem reservada sob `example.com` exclusivamente para validação: não é o endereço público e essa saída não deve ser usada no deploy. O domínio real será definido apenas na etapa de deploy.
+Essa URL determina canonical, sitemap, robots e URLs das imagens sociais. Ao definir ou trocar o domínio, execute o build novamente. O exemplo de build acima usa uma origem reservada sob `example.com` exclusivamente para validação: não é o endereço público e essa saída não deve ser usada no deploy. A configuração do domínio oficial deve ser fornecida no ambiente de produção.
 
 ## CI e assets sociais
 
@@ -46,7 +46,8 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 - `/categoria/[slug]`: categoria com busca e filtros.
 - `/v/[codigo]`: produtos do conteúdo publicado `001`.
 - `/colecao/[slug]`: coleções navegáveis.
-- `/admin`: painel demonstrativo sem autenticação, fora da navegação e do sitemap, com noindex/nofollow e bloqueio no robots.
+
+A rota demonstrativa `/admin` foi removida e não é exportada. O bloqueio preventivo no robots permanece. Um admin real com autenticação será implementado em etapa futura.
 
 ## Onde editar
 
@@ -59,14 +60,14 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 
 Os cinco produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
 
-Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Cliques no admin são simulados; não existe rastreamento. O admin não permite editar dados e não contém informações privadas.
+Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Não existe rastreamento ou painel administrativo público.
 
-Nenhum backend, banco, autenticação, analytics ou redirecionamento `/go` foi implementado. Não publicar dados sensíveis no painel público.
+Nenhum backend, banco, autenticação, analytics ou redirecionamento `/go` foi implementado.
 
-## Primeiro deploy manual na Vercel
+## Hospedagem na Vercel
 
 Importe `1Luisin/site_isso_facilita` pelo dashboard, com Framework Preset **Next.js**, raiz do repositório e Node **24.x**. Preserve os comandos/diretório de saída detectados automaticamente; não é necessário `vercel.json`. A Vercel gerencia os patches da série 24; `.nvmrc` continua fixando 24.14.1 localmente e no CI.
 
-Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. No primeiro deploy, deixe `NEXT_PUBLIC_SITE_URL` sem cadastro: a URL estável de produção será fornecida pela Vercel. Não copie a URL de validação do CI para a Vercel. Faça o deploy manualmente e copie o domínio de produção `.vercel.app`.
+Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. Configure `NEXT_PUBLIC_SITE_URL=https://issofacilita.app.br` em produção. Sem essa variável, a URL estável fornecida pela Vercel continua como fallback. Não copie a URL de validação do CI para a Vercel. A associação de domínio e o redirecionamento de www serão configurados externamente na Vercel, sem regras de redirecionamento no código.
 
-Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. O admin permanece fora da navegação e do sitemap. Domínio próprio e analytics ficam para etapas posteriores.
+Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. A rota admin não deve existir na exportação. Analytics permanece fora do escopo.
