@@ -2,6 +2,23 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { publishedVideos, videoProducts } from "@/lib/data";
 import { ProductGrid } from "@/components/catalog";
+import { pageMetadata } from "@/lib/site";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ codigo: string }>;
+}) {
+  const { codigo } = await params;
+  const video = publishedVideos.find((video) => video.code === codigo);
+  if (!video) notFound();
+  return pageMetadata({
+    title: `Produtos do carrossel #${video.code}`,
+    description: video.description,
+    path: `/v/${video.code}`,
+    image: video.cover ? `/social/carrossel-${video.code}.jpg` : undefined,
+    imageAlt: video.title,
+  });
+}
 export const dynamicParams = false;
 export const generateStaticParams = () =>
   publishedVideos.map((v) => ({ codigo: v.code }));

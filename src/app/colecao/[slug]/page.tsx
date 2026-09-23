@@ -2,6 +2,23 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { publishedCollections, publishedProducts } from "@/lib/data";
 import { ProductGrid } from "@/components/catalog";
+import { pageMetadata } from "@/lib/site";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const collection = publishedCollections.find(
+    (collection) => collection.slug === slug,
+  );
+  if (!collection) notFound();
+  return pageMetadata({
+    title: collection.name,
+    description: `Explore os achadinhos da coleção ${collection.name} no Isso Facilita!`,
+    path: `/colecao/${collection.slug}`,
+  });
+}
 export const dynamicParams = false;
 export const generateStaticParams = () =>
   publishedCollections.map(({ slug }) => ({ slug }));

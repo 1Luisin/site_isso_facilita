@@ -3,6 +3,23 @@ import { notFound } from "next/navigation";
 import { publishedProducts, categories } from "@/lib/data";
 import { ProductArt } from "@/components/art";
 import { ProductGrid } from "@/components/catalog";
+import { pageMetadata } from "@/lib/site";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = publishedProducts.find((product) => product.slug === slug);
+  if (!product) notFound();
+  return pageMetadata({
+    title: product.name,
+    description: product.description,
+    path: `/produto/${product.slug}`,
+    image: product.image ? `/social/produto-${product.slug}.jpg` : undefined,
+    imageAlt: product.name,
+  });
+}
 export const dynamicParams = false;
 export const generateStaticParams = () =>
   publishedProducts.map((p) => ({ slug: p.slug }));

@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { site, pageMetadata } from "@/lib/site";
 import "./globals.css";
 export const metadata: Metadata = {
+  ...pageMetadata({
+    title: site.title,
+    description: site.description,
+    path: "/",
+  }),
+  metadataBase: site.url,
+  applicationName: site.shortName,
+  publisher: site.name,
+  category: "Compras e estilo de vida",
+  robots: { index: true, follow: true },
+  alternates: undefined,
   title: {
-    default: "Isso Facilita! · Achadinhos para o seu dia",
-    template: "%s · Isso Facilita!",
+    default: site.title,
+    template: `%s · ${site.name}`,
   },
-  description:
-    "Pequenas descobertas para uma rotina mais prática, bonita e cheia de carinho.",
+  description: site.description,
 };
 export default function RootLayout({
   children,
@@ -15,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang={site.language}>
       <body>
         <a className="skip-link" href="#conteudo">
           Pular para o conteúdo

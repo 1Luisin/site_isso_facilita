@@ -2,6 +2,21 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { categories, publishedProducts } from "@/lib/data";
 import { Catalog } from "@/components/catalog";
+import { pageMetadata } from "@/lib/site";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const category = categories.find((category) => category.slug === slug);
+  if (!category) notFound();
+  return pageMetadata({
+    title: `${category.name} · Achadinhos`,
+    description: category.description,
+    path: `/categoria/${category.slug}`,
+  });
+}
 export const dynamicParams = false;
 export const generateStaticParams = () =>
   categories.map((c) => ({ slug: c.slug }));

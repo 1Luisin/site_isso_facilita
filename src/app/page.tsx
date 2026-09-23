@@ -1,5 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { site, pageMetadata } from "@/lib/site";
+export const metadata = pageMetadata({
+  title: site.title,
+  description: site.description,
+  path: "/",
+});
 import { Catalog, ProductGrid } from "@/components/catalog";
 import { ProductArt } from "@/components/art";
 import {

@@ -21,7 +21,13 @@ npm run build
 
 O build exporta o site estático em `out/`. Para produção, sirva essa pasta com um servidor de arquivos estáticos. `next start` não é compatível com `output: 'export'`.
 
-## Páginas
+## Configuração da URL pública
+
+Copie `.env.example` para `.env.local` ou configure `NEXT_PUBLIC_SITE_URL` no ambiente de build. Sem valor, `npm run dev` usa `http://localhost:3000`. Para `npm run build`, a variável é obrigatória e deve conter a origem HTTPS pública real, sem caminho, query ou fragmento; localhost é rejeitado em produção. Nenhum domínio definitivo está cadastrado.
+
+Essa URL determina canonical, sitemap, robots e URLs das imagens sociais. Ao definir ou trocar o domínio, execute o build novamente. As imagens sociais JPG em `public/social/` e os ícones são gerados localmente por `scripts/generate-social-assets.mjs`, usando o Sharp já fornecido pelo Next.js (sem nova dependência de runtime). Ao publicar novos produtos ou vídeos, regenere esses arquivos antes do build.
+
+## Rotas
 
 - `/`: catálogo, busca, filtros e seleções.
 - `/produto/[slug]`: detalhes de cada produto.
