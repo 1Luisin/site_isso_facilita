@@ -1,11 +1,13 @@
-// Development-only generation. Uses Sharp already installed with Next.js.
+// Development-only generation with repository fonts rendered as vector paths.
 import sharp from "sharp";
+import opentype from "opentype.js";
+import { join } from "node:path";
 import { mkdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const file = (path) => `${root}${path}`;
+const file = (path) => join(root, path);
 const dataSource = await readFile(file("src/lib/data.ts"), "utf8");
 const dataModule = ts.transpileModule(dataSource, {
   compilerOptions: {
@@ -17,8 +19,14 @@ const { publishedProducts, publishedVideos } = await import(
   `data:text/javascript;base64,${Buffer.from(dataModule).toString("base64")}`
 );
 await mkdir(file("public/social"), { recursive: true });
-const escape = (s) =>
-  s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+// Outlines avoid OS font discovery, fallback and text shaping differences.
+const serif = opentype.loadSync(file("scripts/fonts/Gelasio.ttf"));
+const sans = opentype.loadSync(file("scripts/fonts/Arimo.ttf"));
+function textPath(text, x, y, size, font, color, spacing = 0) {
+  const path = font.getPath(text, x, y, size, { letterSpacing: spacing / size });
+  path.fill = color;
+  return path.toSVG(3);
+}
 const wrap = (text, max = 24) => {
   const lines = [""];
   for (const word of text.split(" ")) {
@@ -35,10 +43,10 @@ function background(title, label, hasImage) {
     <rect width="1200" height="630" fill="#fae9ed"/>
     <rect x="28" y="28" width="1144" height="574" rx="24" fill="#fffcf9" stroke="#e4bdca" stroke-width="2"/>
     <g transform="translate(98 107) scale(.6)">${flower}</g>
-    <text x="149" y="119" font-family="Georgia" font-size="38" font-weight="bold" fill="#503d43">Isso Facilita!</text>
-    <text x="68" y="206" font-family="Arial" font-size="19" letter-spacing="3" fill="#a64964">${escape(label)}</text>
-    ${lines.map((line, i) => `<text x="68" y="${292 + i * 64}" font-family="Georgia" font-size="${hasImage ? 49 : 67}" fill="#503d43">${escape(line)}</text>`).join("")}
-    <text x="68" y="548" font-family="Arial" font-size="23" fill="#806d72">Pequenos achados. Dias mais leves.</text>
+    ${textPath("Isso Facilita!", 149, 119, 38, serif, "#503d43")}
+    ${textPath(label, 68, 206, 19, sans, "#a64964", 3)}
+    ${lines.map((line, i) => textPath(line, 68, 292 + i * 64, hasImage ? 49 : 67, serif, "#503d43")).join("")}
+    ${textPath("Pequenos achados. Dias mais leves.", 68, 548, 23, sans, "#806d72")}
     ${hasImage ? '<rect x="711" y="65" width="417" height="500" rx="22" fill="#fae9ed"/>' : `<g transform="translate(1030 348) scale(1.9)">${flower}</g>`}
   </svg>`);
 }
