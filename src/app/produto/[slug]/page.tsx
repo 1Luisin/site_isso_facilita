@@ -26,7 +26,11 @@ export default async function ProductPage({
       </nav>
       <section className="product-detail">
         <div className="detail-image">
-          <ProductArt product={product} />
+          <ProductArt
+            product={product}
+            sizes="(max-width: 580px) calc(100vw - 62px), (max-width: 1200px) calc((100vw - 140px) / 2), 564px"
+            eager
+          />
           <span>Confira as opções disponíveis na loja.</span>
         </div>
         <div className="detail-copy">

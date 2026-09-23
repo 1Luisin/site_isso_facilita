@@ -41,11 +41,11 @@ export default function Home() {
           <span className="scribble">seu setup merece um mimo!</span>
           <div className="paper-photo">
             <div className="tape" />
-            {lamp && <ProductArt product={lamp} />}
+            {lamp && <ProductArt product={lamp} sizes="246px" eager />}
             <span>luz boa + cantinho favorito ♡</span>
           </div>
           <div className="mini-photo">
-            {figurine && <ProductArt product={figurine} />}
+            {figurine && <ProductArt product={figurine} sizes="137px" eager />}
             <span>fofura do dia ✿</span>
           </div>
           <span className="sticker">
@@ -56,15 +56,21 @@ export default function Home() {
         </div>
       </section>
       <div className="category-strip">
-        {categories.map((c) => (
-          <Link href={"/categoria/" + c.slug} key={c.slug}>
-            <span>{c.symbol}</span>
-            <div>
-              <strong>{c.name}</strong>
-              <small>explorar achadinhos ↗</small>
-            </div>
-          </Link>
-        ))}
+        {categories
+          .filter((category) =>
+            publishedProducts.some(
+              (product) => product.category === category.slug,
+            ),
+          )
+          .map((c) => (
+            <Link href={"/categoria/" + c.slug} key={c.slug}>
+              <span>{c.symbol}</span>
+              <div>
+                <strong>{c.name}</strong>
+                <small>explorar achadinhos ↗</small>
+              </div>
+            </Link>
+          ))}
       </div>
       <section className="section latest">
         <div className="section-heading">
@@ -124,13 +130,20 @@ export default function Home() {
                   href={"/v/" + v.code}
                   aria-label={"Ver produtos do carrossel #" + v.code}
                 >
-                  <Image
-                    src={v.cover}
-                    alt="Setup bonito do zero sem gastar uma fortuna — capa do carrossel #001"
-                    width={1080}
-                    height={1350}
-                    sizes="(max-width: 580px) 90vw, 300px"
-                  />
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcSet={`${v.cover.replace(".webp", "-540.webp")} 540w, ${v.cover} 1080w`}
+                      sizes="(max-width: 580px) calc(100vw - 38px), 280px"
+                    />
+                    <Image
+                      src={v.cover}
+                      alt="Setup bonito do zero sem gastar uma fortuna — capa do carrossel #001"
+                      width={1080}
+                      height={1350}
+                      sizes="(max-width: 580px) calc(100vw - 38px), 280px"
+                    />
+                  </picture>
                 </Link>
               )}
               <div className="video-feature-copy">

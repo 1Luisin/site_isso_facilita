@@ -1,16 +1,32 @@
 import type { Product } from "@/lib/data";
 import Image from "next/image";
-export function ProductArt({ product }: { product: Product }) {
+export function ProductArt({
+  product,
+  sizes = "(max-width: 580px) calc((100vw - 48px) / 2), (max-width: 800px) calc((100vw - 80px) / 2), (max-width: 1200px) calc((100vw - 102px) / 4), 295px",
+  eager = false,
+}: {
+  product: Product;
+  sizes?: string;
+  eager?: boolean;
+}) {
   if (product.image)
     return (
       <div className={"product-art " + product.color}>
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 600px) 50vw, 320px"
-          style={{ objectFit: "contain", padding: "12px" }}
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcSet={`${product.image.replace(".webp", "-480.webp")} 480w, ${product.image} 900w`}
+            sizes={sizes}
+          />
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes={sizes}
+            loading={eager ? "eager" : "lazy"}
+            style={{ objectFit: "contain", padding: "12px" }}
+          />
+        </picture>
       </div>
     );
   return (

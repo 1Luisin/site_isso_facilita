@@ -1,0 +1,104 @@
+[
+  {
+    "input": "public/products/bonequinho-decorativo.png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true,
+    "before": 1040850,
+    "outputs": [
+      {
+        "file": "public/products/bonequinho-decorativo-480.webp",
+        "bytes": 39088
+      },
+      {
+        "file": "public/products/bonequinho-decorativo.webp",
+        "bytes": 106624
+      }
+    ]
+  },
+  {
+    "input": "public/products/fita-led.png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true,
+    "before": 1809194,
+    "outputs": [
+      {
+        "file": "public/products/fita-led-480.webp",
+        "bytes": 72970
+      },
+      {
+        "file": "public/products/fita-led.webp",
+        "bytes": 184382
+      }
+    ]
+  },
+  {
+    "input": "public/products/luminaria-de-mesa.png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true,
+    "before": 1283940,
+    "outputs": [
+      {
+        "file": "public/products/luminaria-de-mesa-480.webp",
+        "bytes": 31666
+      },
+      {
+        "file": "public/products/luminaria-de-mesa.webp",
+        "bytes": 80294
+      }
+    ]
+  },
+  {
+    "input": "public/products/mousepad.png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true,
+    "before": 1506878,
+    "outputs": [
+      {
+        "file": "public/products/mousepad-480.webp",
+        "bytes": 42104
+      },
+      {
+        "file": "public/products/mousepad.webp",
+        "bytes": 107418
+      }
+    ]
+  },
+  {
+    "input": "public/products/suporte-de-fone.png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true,
+    "before": 1210866,
+    "outputs": [
+      {
+        "file": "public/products/suporte-de-fone-480.webp",
+        "bytes": 41396
+      },
+      {
+        "file": "public/products/suporte-de-fone.webp",
+        "bytes": 100264
+      }
+    ]
+  },
+  {
+    "input": "public/videos/carrossel-001.png",
+    "width": 1080,
+    "height": 1350,
+    "alpha": false,
+    "before": 1774495,
+    "outputs": [
+      {
+        "file": "public/videos/carrossel-001-540.webp",
+        "bytes": 56606
+      },
+      {
+        "file": "public/videos/carrossel-001.webp",
+        "bytes": 153112
+      }
+    ]
+  }
+]
