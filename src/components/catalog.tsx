@@ -3,7 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { categories, publishedCollections, type Product } from "@/lib/data";
 import { ProductArt } from "./art";
-export function ProductCard({ product }: { product: Product }) {
+import { AffiliateLink } from "./affiliate-link";
+import type { AnalyticsContext } from "@/lib/analytics";
+export function ProductCard({ product, pageType, contentCode }: { product: Product } & AnalyticsContext) {
   const [favorite, setFavorite] = useState(false);
   return (
     <article className="product-card">
@@ -34,19 +36,14 @@ export function ProductCard({ product }: { product: Product }) {
         <h3>
           <Link href={"/produto/" + product.slug}>{product.name}</Link>
         </h3>
-        <a
-          className="shop-button"
-          href={product.affiliateUrl}
-          target="_blank"
-          rel="sponsored noopener noreferrer"
-        >
+        <AffiliateLink className="shop-button" product={product} pageType={pageType} contentCode={contentCode}>
           Ver preço na loja <span>↗</span>
-        </a>
+        </AffiliateLink>
       </div>
     </article>
   );
 }
-export function ProductGrid({ items }: { items: Product[] }) {
+export function ProductGrid({ items, pageType, contentCode }: { items: Product[] } & AnalyticsContext) {
   if (!items.length) {
     return (
       <div className="empty">
@@ -62,7 +59,7 @@ export function ProductGrid({ items }: { items: Product[] }) {
   return (
     <div className="product-grid">
       {items.map((p) => (
-        <ProductCard product={p} key={p.slug} />
+        <ProductCard product={p} key={p.slug} pageType={pageType} contentCode={contentCode} />
       ))}
     </div>
   );
@@ -72,7 +69,7 @@ const normalize = (s: string) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
-export function Catalog({ items }: { items: Product[] }) {
+export function Catalog({ items, pageType, contentCode }: { items: Product[] } & AnalyticsContext) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [collection, setCollection] = useState("");
@@ -153,7 +150,7 @@ export function Catalog({ items }: { items: Product[] }) {
         )}
       </div>
       {filtered.length ? (
-        <ProductGrid items={filtered} />
+        <ProductGrid items={filtered} pageType={pageType} contentCode={contentCode} />
       ) : (
         <div className="empty">
           <span>✿</span>

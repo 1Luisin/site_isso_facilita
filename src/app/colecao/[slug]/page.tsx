@@ -43,7 +43,7 @@ export default async function CollectionPage({
         <h1>{title}</h1>
         <p>Pequenas descobertas que combinam entre si — e com você.</p>
       </div>
-      <ProductGrid
+      <ProductGrid pageType="collection"
         items={publishedProducts.filter((p) => p.collections.includes(title))}
       />
     </div>

@@ -38,7 +38,7 @@ export default async function CategoryPage({
         <h1>{category.name}</h1>
         <p>{category.description}</p>
       </div>
-      <Catalog items={publishedProducts.filter((p) => p.category === slug)} />
+      <Catalog pageType="category" items={publishedProducts.filter((p) => p.category === slug)} />
     </div>
   );
 }

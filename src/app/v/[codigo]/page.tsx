@@ -43,7 +43,7 @@ export default async function VideoPage({
           {videoProducts(video.slugs).length} achadinhos neste vídeo
         </small>
       </div>
-      <ProductGrid items={videoProducts(video.slugs)} />
+      <ProductGrid pageType="content" contentCode={video.code} items={videoProducts(video.slugs)} />
     </div>
   );
 }

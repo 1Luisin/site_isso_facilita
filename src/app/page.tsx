@@ -89,7 +89,7 @@ export default function Home() {
           <p>{latestVideo.title}</p>
           <span className="muted">uma seleção para salvar ♡</span>
         </div>
-        <ProductGrid items={videoProducts(latestVideo.slugs)} />
+        <ProductGrid pageType="home" contentCode={latestVideo.code} items={videoProducts(latestVideo.slugs)} />
       </section>
       <section id="colecoes" className="section">
         <div className="section-heading">
@@ -113,7 +113,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <Catalog items={publishedProducts} />
+      <Catalog pageType="home" items={publishedProducts} />
       <section id="videos" className="section">
         <div className="section-heading">
           <div>

@@ -60,9 +60,9 @@ A rota demonstrativa `/admin` foi removida e não é exportada. O bloqueio preve
 
 Os cinco produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
 
-Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Não existe rastreamento ou painel administrativo público.
+Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Analytics é opcional; não existe painel administrativo público.
 
-Nenhum backend, banco, autenticação, analytics ou redirecionamento `/go` foi implementado.
+Nenhum backend, banco, autenticação ou redirecionamento `/go` foi implementado.
 
 ## Hospedagem na Vercel
 
@@ -70,4 +70,25 @@ Importe `1Luisin/site_isso_facilita` pelo dashboard, com Framework Preset **Next
 
 Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. Configure `NEXT_PUBLIC_SITE_URL=https://issofacilita.app.br` em produção. Sem essa variável, a URL estável fornecida pela Vercel continua como fallback. Não copie a URL de validação do CI para a Vercel. A associação de domínio e o redirecionamento de www serão configurados externamente na Vercel, sem regras de redirecionamento no código.
 
-Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. A rota admin não deve existir na exportação. Analytics permanece fora do escopo.
+Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. A rota admin não deve existir na exportação.
+
+## Analytics e origem de tráfego
+
+GA4 usa `@next/third-parties/google`, carregado após a hidratação. Cadastre na Vercel `NEXT_PUBLIC_GA_MEASUREMENT_ID` com o Measurement ID real (`G-` seguido de 10 letras maiúsculas/dígitos) e gere um novo build. Sem ID ou com formato inválido, nenhum script GA é carregado; o CI não precisa dessa variável. Não cadastre API secret ou token.
+
+O único evento personalizado é `affiliate_click`: `product_slug`, `product_name`, `affiliate_network` (`shopee`), `page_type` (`home`, `product`, `content`, `category`, `collection`) e `content_code` quando aplicável. O componente `AffiliateLink` mantém o endereço original e abre uma nova aba mesmo se analytics falhar. Não envia preço, URL afiliada, textos da busca nem dados pessoais nos parâmetros personalizados. O evento indica saída para a loja, não compra confirmada. Para analisar os parâmetros em relatórios, cadastre dimensões personalizadas de escopo de evento no GA4.
+
+Não há `page_view` manual. No fluxo web do GA4, mantenha a medição de visualizações por alterações do histórico habilitada. Antes de ativar, desative as opções de medição otimizada **cliques de saída**, **pesquisa no site** e **interações com formulários**; isso evita eventos extras com URLs externas/textos que não fazem parte do tracking solicitado. A busca local não altera a URL. Não coloque informações pessoais em UTMs/URLs, pois o GA coleta localização da página e referência automaticamente.
+
+Links sugeridos (UTMs são lidas pelo GA; não há armazenamento próprio e canonicals permanecem limpos):
+
+- Instagram bio: https://issofacilita.app.br/?utm_source=instagram&utm_medium=bio&utm_campaign=perfil
+- TikTok bio: https://issofacilita.app.br/?utm_source=tiktok&utm_medium=bio&utm_campaign=perfil
+- Carrossel no Instagram: https://issofacilita.app.br/v/001?utm_source=instagram&utm_medium=organic_social&utm_campaign=carrossel_001
+- Carrossel no TikTok: https://issofacilita.app.br/v/001?utm_source=tiktok&utm_medium=organic_social&utm_campaign=carrossel_001
+
+### Privacidade antes da ativação
+
+`/privacidade` descreve analytics e afiliados. Quando habilitado, GA4 pode criar cookies próprios `_ga` e `_ga_<id>` (padrão de até dois anos, sujeito ao navegador/configuração), usando identificadores de navegador e sessão. Não adicionamos localStorage, armazenamento de UTMs, Google Ads ou Google Signals. O envio ao Google envolve informações técnicas de rede; os eventos personalizados não adicionam IP ou identificação do visitante.
+
+Esta etapa não implementa banner nem gestão de consentimento: um ID válido ativa o GA sem aguardar uma escolha do visitante. Antes de ativar o ID real, avalie a base legal, consentimento prévio para cookies não essenciais, recusa/revogação, retenção e compartilhamento internacional. Se o consentimento for a base adotada, implemente o bloqueio do GA até a autorização; a página de privacidade, sozinha, não substitui isso. Mantenha o ID vazio até concluir essa avaliação. Referências: [cookies do GA4](https://support.google.com/analytics/answer/11397207) e [guia da ANPD](https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia_orientativo_cookies_e_protecao_de_dados_pessoais).

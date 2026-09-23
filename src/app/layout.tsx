@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { gaMeasurementId } from "@/lib/analytics-config";
 import { site, pageMetadata } from "@/lib/site";
 import "./globals.css";
 export const metadata: Metadata = {
@@ -61,7 +63,9 @@ export default function RootLayout({
             compra, sem custo adicional para você.
           </p>
           <small>© {new Date().getFullYear()} Isso Facilita!</small>
+          <p><Link href="/privacidade">Política de Privacidade</Link></p>
         </footer>
+        {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}
       </body>
     </html>
   );

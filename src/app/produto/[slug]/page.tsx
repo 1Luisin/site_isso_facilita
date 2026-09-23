@@ -1,3 +1,4 @@
+import { AffiliateLink } from "@/components/affiliate-link";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { publishedProducts, categories } from "@/lib/data";
@@ -56,14 +57,9 @@ export default async function ProductPage({
           </span>
           <h1>{product.name}</h1>
           <p>{product.description}</p>
-          <a
-            className="primary-button"
-            href={product.affiliateUrl}
-            target="_blank"
-            rel="sponsored noopener noreferrer"
-          >
+          <AffiliateLink className="primary-button" product={{ slug: product.slug, name: product.name, affiliateUrl: product.affiliateUrl }} pageType="product">
             Ver preço na loja ↗
-          </a>
+          </AffiliateLink>
           <p className="micro">
             Confira preço, opções e disponibilidade diretamente na loja.
           </p>
@@ -74,7 +70,7 @@ export default async function ProductPage({
       </section>
       <section className="section">
         <h2>Você também pode gostar</h2>
-        <ProductGrid
+        <ProductGrid pageType="product"
           items={publishedProducts.filter(
             (p) => p.slug !== slug && p.category === product.category,
           )}
