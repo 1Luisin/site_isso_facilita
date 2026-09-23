@@ -1,6 +1,6 @@
 # Modelo relacional proposto — Isso Facilita!
 
-**Etapa 8: somente arquivos para revisão. Nenhum banco foi criado ou conectado e nenhum SQL foi aplicado.** O site continua lendo `src/lib/data.ts`, com exportação estática, GA4 opcional e sem admin/API. A migration e o seed não estão ligados ao CI nem a scripts de instalação/build. Não há SDK, CLI, credencial ou configuração Supabase no projeto.
+**Modelo elaborado na Etapa 8 e aplicado na Etapa 9.** O histórico da aplicação e os testes estão em [database-bootstrap.md](database-bootstrap.md). O site continua lendo `src/lib/data.ts`, com exportação estática, GA4 opcional e sem admin/API. A migration e o seed não estão ligados ao CI nem a scripts de instalação/build. A CLI é somente uma ferramenta de desenvolvimento; não há SDK nem credenciais versionadas.
 
 Arquivos:
 
