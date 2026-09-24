@@ -1,7 +1,7 @@
 import { AffiliateLink } from "@/components/affiliate-link";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { publishedProducts, categories } from "@/lib/data";
+import { getPublicCatalogSnapshot } from "@/lib/data-source";
 import { ProductArt } from "@/components/art";
 import { ProductGrid } from "@/components/catalog";
 import { pageMetadata } from "@/lib/site";
@@ -10,6 +10,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { products: publishedProducts } = snapshot;
   const { slug } = await params;
   const product = publishedProducts.find((product) => product.slug === slug);
   if (!product) notFound();
@@ -22,13 +24,17 @@ export async function generateMetadata({
   });
 }
 export const dynamicParams = false;
-export const generateStaticParams = () =>
-  publishedProducts.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const { products: publishedProducts } = await getPublicCatalogSnapshot();
+  return publishedProducts.map(item => ({ slug: item.slug }));
+}
 export default async function ProductPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { products: publishedProducts, categories } = snapshot;
   const { slug } = await params;
   const product = publishedProducts.find((p) => p.slug === slug);
   if (!product) notFound();

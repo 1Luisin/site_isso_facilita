@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/data";
+import type { Product } from "@/lib/data-source/types";
 import Image from "next/image";
 export function ProductArt({
   product,
@@ -15,7 +15,7 @@ export function ProductArt({
         <picture>
           <source
             type="image/webp"
-            srcSet={`${product.image.replace(".webp", "-480.webp")} 480w, ${product.image} 900w`}
+            srcSet={product.mobileImage ? `${product.mobileImage} 480w, ${product.image} 900w` : `${product.image} 900w`}
             sizes={sizes}
           />
           <Image

@@ -1,6 +1,6 @@
 # Isso Facilita!
 
-Catálogo estático em Next.js App Router + TypeScript, com CSS global e imagens otimizadas. Sem backend ou banco de dados. Publicados atualmente: carrossel #001 e seus cinco produtos. Os demais produtos e vídeos #002/#003 são rascunhos internos, ausentes do catálogo e das páginas públicas de produtos/vídeos.
+Catálogo estático em Next.js App Router + TypeScript, com CSS global e imagens otimizadas. A fonte editorial pode ser local ou Supabase, consultado somente durante o build. Publicados atualmente: carrossel #001 e seus cinco produtos. Os demais produtos e conteúdos #002/#003 são rascunhos, ausentes do catálogo e das páginas públicas de produtos/conteúdos.
 
 ## Executar
 
@@ -51,7 +51,8 @@ A rota demonstrativa `/admin` foi removida e não é exportada. O bloqueio preve
 
 ## Onde editar
 
-- `src/lib/data.ts`: dados publicados e rascunhos; `publishedProducts`, `publishedVideos` e `publishedCollections` controlam a seleção pública. `categoriesWithPublishedProducts` filtra categorias da Home e do sitemap; categorias vazias continuam com rota própria.
+- `src/lib/data-source/`: snapshot público compartilhado pelos adapters static e Supabase; páginas, metadata e sitemap usam essa camada.
+- `src/lib/data.ts`: dados publicados e rascunhos da fonte static, preservados para rollback e geração social. Categorias sem produtos não aparecem na Home/sitemap, mas continuam com rota própria.
 - `src/components/art.tsx`: ilustrações próprias usadas como placeholders.
 - `src/components/catalog.tsx`: cards, busca, filtros e favoritos temporários.
 - `src/app/globals.css`: cores, tipografia, layout e responsividade.
@@ -62,7 +63,17 @@ Os cinco produtos públicos usam imagens WebP em `public/products/` e links reai
 
 Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Analytics é opcional; não existe painel administrativo público.
 
-Nenhum backend, banco, autenticação ou redirecionamento `/go` foi implementado.
+O banco Supabase foi preparado na Etapa 9. Não há backend de runtime, autenticação, painel ou redirecionamento `/go` no site.
+
+## Fonte do catálogo
+
+`SITE_DATA_SOURCE=static` (também o padrão quando ausente) usa `data.ts`. Para leitura pública do banco durante o build, use `SITE_DATA_SOURCE=supabase`, `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` no ambiente local/Vercel. Essas variáveis não usam `NEXT_PUBLIC_`: o browser recebe somente dados públicos já renderizados. Configuração ausente/inválida ou dados inconsistentes fazem o build Supabase falhar, sem fallback. O CI continua no modo static e não depende do banco.
+
+`npm run check:data-parity` compara as duas fontes usando as variáveis locais (aceita `.env.local`, ignorado pelo Git). `npm run test:data-source` verifica validações sem rede. Veja [a configuração e validação completas](docs/data-source.md).
+
+**Editar o banco não atualiza imediatamente o site:** banco alterado → novo build/deploy → HTML atualizado. Rollback: selecionar `SITE_DATA_SOURCE=static` e gerar novo build. Não há Deploy Hook.
+
+**Limitação editorial:** o gerador social ainda usa `data.ts`. Antes de o futuro admin se tornar a fonte editorial exclusiva, ele deverá consumir o mesmo snapshot Supabase ou um derivado, para atualizar Open Graph junto com nomes/capas/produtos. Até lá, mantenha paridade editorial e regenere os assets locais.
 
 ## Hospedagem na Vercel
 

@@ -8,15 +8,13 @@ export const metadata = pageMetadata({
 });
 import { Catalog, ProductGrid } from "@/components/catalog";
 import { ProductArt } from "@/components/art";
-import {
-  publishedProducts,
-  categoriesWithPublishedProducts,
-  publishedCollections,
-  publishedVideos,
-  latestVideo,
-  videoProducts,
-} from "@/lib/data";
-export default function Home() {
+import { getPublicCatalogSnapshot } from "@/lib/data-source";
+import { categoriesWithProducts, productsBySlugs } from "@/lib/data-source/types";
+export default async function Home() {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { products: publishedProducts, collections: publishedCollections, contents, categories } = snapshot;
+  const categoriesWithPublishedProducts = categoriesWithProducts(snapshot);
+  const featuredContent = contents.find(c => c.code === snapshot.settings.featuredContentCode)!;
   const lamp = publishedProducts.find(
     (product) => product.slug === "luminaria-de-mesa",
   );
@@ -80,16 +78,16 @@ export default function Home() {
               Achadinhos do último vídeo <span>✿</span>
             </h2>
           </div>
-          <Link className="text-link" href={"/v/" + latestVideo.code}>
-            Ver vídeo #{latestVideo.code} ↗
+          <Link className="text-link" href={"/v/" + featuredContent.code}>
+            Ver vídeo #{featuredContent.code} ↗
           </Link>
         </div>
         <div className="video-caption">
-          <span className="video-code">▶ #{latestVideo.code}</span>
-          <p>{latestVideo.title}</p>
+          <span className="video-code">▶ #{featuredContent.code}</span>
+          <p>{featuredContent.title}</p>
           <span className="muted">uma seleção para salvar ♡</span>
         </div>
-        <ProductGrid pageType="home" contentCode={latestVideo.code} items={videoProducts(latestVideo.slugs)} />
+        <ProductGrid pageType="home" contentCode={featuredContent.code} items={productsBySlugs(snapshot, featuredContent.slugs)} />
       </section>
       <section id="colecoes" className="section">
         <div className="section-heading">
@@ -113,7 +111,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <Catalog pageType="home" items={publishedProducts} />
+      <Catalog categories={categories} collections={publishedCollections} pageType="home" items={publishedProducts} />
       <section id="videos" className="section">
         <div className="section-heading">
           <div>
@@ -122,7 +120,7 @@ export default function Home() {
           </div>
         </div>
         <div className="video-features">
-          {publishedVideos.map((v) => (
+          {contents.map((v) => (
             <article className="video-feature" key={v.code}>
               {v.cover && (
                 <Link
@@ -133,7 +131,7 @@ export default function Home() {
                   <picture>
                     <source
                       type="image/webp"
-                      srcSet={`${v.cover.replace(".webp", "-540.webp")} 540w, ${v.cover} 1080w`}
+                      srcSet={`${v.mobileCover ?? v.cover} 540w, ${v.cover} 1080w`}
                       sizes="(max-width: 580px) calc(100vw - 38px), 280px"
                     />
                     <Image
@@ -151,7 +149,7 @@ export default function Home() {
                 <h3>{v.title}</h3>
                 <p>{v.description}</p>
                 <p className="muted">
-                  {videoProducts(v.slugs).length} achadinhos neste carrossel
+                  {productsBySlugs(snapshot, v.slugs).length} achadinhos neste carrossel
                 </p>
                 <Link className="primary-button" href={"/v/" + v.code}>
                   Ver produtos do carrossel ↗
@@ -160,18 +158,18 @@ export default function Home() {
                   className="video-social-links"
                   aria-label="Ver publicação original"
                 >
-                  {v.instagramUrl && (
+                  {v.links.instagram && (
                     <a
-                      href={v.instagramUrl}
+                      href={v.links.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Ver no Instagram ↗
                     </a>
                   )}
-                  {v.tiktokUrl && (
+                  {v.links.tiktok && (
                     <a
-                      href={v.tiktokUrl}
+                      href={v.links.tiktok}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

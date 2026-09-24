@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { Product } from "@/lib/data";
+import type { Product } from "@/lib/data-source/types";
 import { trackAffiliateClick, type AnalyticsContext } from "@/lib/analytics";
 
 type AffiliateLinkProps = AnalyticsContext & {

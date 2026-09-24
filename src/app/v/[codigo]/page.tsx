@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { publishedVideos, videoProducts } from "@/lib/data";
+import { getPublicCatalogSnapshot } from "@/lib/data-source";
+import { productsBySlugs } from "@/lib/data-source/types";
 import { ProductGrid } from "@/components/catalog";
 import { pageMetadata } from "@/lib/site";
 export async function generateMetadata({
@@ -8,8 +9,10 @@ export async function generateMetadata({
 }: {
   params: Promise<{ codigo: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { contents } = snapshot;
   const { codigo } = await params;
-  const video = publishedVideos.find((video) => video.code === codigo);
+  const video = contents.find((video) => video.code === codigo);
   if (!video) notFound();
   return pageMetadata({
     title: `Produtos do carrossel #${video.code}`,
@@ -20,15 +23,19 @@ export async function generateMetadata({
   });
 }
 export const dynamicParams = false;
-export const generateStaticParams = () =>
-  publishedVideos.map((v) => ({ codigo: v.code }));
+export async function generateStaticParams() {
+  const { contents } = await getPublicCatalogSnapshot();
+  return contents.map(item => ({ codigo: item.code }));
+}
 export default async function VideoPage({
   params,
 }: {
   params: Promise<{ codigo: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { contents } = snapshot;
   const { codigo } = await params;
-  const video = publishedVideos.find((v) => v.code === codigo);
+  const video = contents.find((v) => v.code === codigo);
   if (!video) notFound();
   return (
     <div className="page-wrap">
@@ -40,10 +47,10 @@ export default async function VideoPage({
         <h1>{video.title}</h1>
         <p>{video.description}</p>
         <small>
-          {videoProducts(video.slugs).length} achadinhos neste vídeo
+          {productsBySlugs(snapshot, video.slugs).length} achadinhos neste vídeo
         </small>
       </div>
-      <ProductGrid pageType="content" contentCode={video.code} items={videoProducts(video.slugs)} />
+      <ProductGrid pageType="content" contentCode={video.code} items={productsBySlugs(snapshot, video.slugs)} />
     </div>
   );
 }

@@ -8,13 +8,17 @@
     "lint": "eslint .",
     "generate:social": "node scripts/generate-social-assets.mjs",
     "check:social": "npm run generate:social && node scripts/check-social-assets.mjs",
-    "check": "npm run lint && npm run build"
+    "check": "npm run lint && npm run build",
+    "check:data-parity": "node --env-file-if-exists=.env.local --conditions=react-server scripts/check-data-parity.mjs",
+    "test:data-source": "node --conditions=react-server --test scripts/data-source.test.mjs"
   },
   "dependencies": {
     "@next/third-parties": "16.3.6",
+    "@supabase/supabase-js": "2.117.1",
     "next": "16.3.6",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@types/node": "^24",

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { categories, publishedCollections, type Product } from "@/lib/data";
+import type { Category, Collection, Product } from "@/lib/data-source/types";
 import { ProductArt } from "./art";
 import { AffiliateLink } from "./affiliate-link";
 import type { AnalyticsContext } from "@/lib/analytics";
@@ -31,7 +31,7 @@ export function ProductCard({ product, pageType, contentCode }: { product: Produ
       </div>
       <div className="card-body">
         <span className="eyebrow">
-          {categories.find((c) => c.slug === product.category)?.name}
+          {product.categoryName}
         </span>
         <h3>
           <Link href={"/produto/" + product.slug}>{product.name}</Link>
@@ -69,7 +69,7 @@ const normalize = (s: string) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
-export function Catalog({ items, pageType, contentCode }: { items: Product[] } & AnalyticsContext) {
+export function Catalog({ items, categories, collections, pageType, contentCode }: { items: Product[]; categories: Category[]; collections: Collection[] } & AnalyticsContext) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [collection, setCollection] = useState("");
@@ -128,7 +128,7 @@ export function Catalog({ items, pageType, contentCode }: { items: Product[] } &
           onChange={(e) => setCollection(e.target.value)}
         >
           <option value="">Todas as coleções</option>
-          {publishedCollections
+          {collections
             .filter((c) => items.some((p) => p.collections.includes(c.name)))
             .map((c) => (
               <option key={c.slug} value={c.name}>

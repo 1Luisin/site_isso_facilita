@@ -1,9 +1,12 @@
+import { getPublicCatalogSnapshot } from "@/lib/data-source";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { gaMeasurementId } from "@/lib/analytics-config";
 import { site, pageMetadata } from "@/lib/site";
 import "./globals.css";
+// Read fresh catalog data at build time without opting into runtime rendering.
+export const dynamic = "force-static";
 export const metadata: Metadata = {
   ...pageMetadata({
     title: site.title,
@@ -22,11 +25,12 @@ export const metadata: Metadata = {
   },
   description: site.description,
 };
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { settings } = await getPublicCatalogSnapshot();
   return (
     <html lang={site.language}>
       <body>
@@ -40,7 +44,7 @@ export default function RootLayout({
           <Link href="/" className="brand">
             <span className="brand-icon">✿</span>
             <span>
-              Isso Facilita!<small>achadinhos que abraçam a rotina</small>
+              {settings.name}<small>{settings.tagline}</small>
             </span>
           </Link>
           <nav aria-label="Navegação principal">
@@ -54,15 +58,14 @@ export default function RootLayout({
         <footer>
           <div className="footer-top">
             <Link href="/" className="brand">
-              Isso Facilita! <span>✿</span>
+              {settings.name} <span>✿</span>
             </Link>
             <p>Um detalhe fofo. Uma rotina mais leve.</p>
           </div>
           <p>
-            Alguns links podem ser de afiliado e podemos receber comissão pela
-            compra, sem custo adicional para você.
+            {settings.footerText}
           </p>
-          <small>© {new Date().getFullYear()} Isso Facilita!</small>
+          <small>© {new Date().getFullYear()} {settings.name}</small>
           <p><Link href="/privacidade">Política de Privacidade</Link></p>
         </footer>
         {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}

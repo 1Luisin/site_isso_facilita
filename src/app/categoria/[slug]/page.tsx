@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { categories, publishedProducts } from "@/lib/data";
+import { getPublicCatalogSnapshot } from "@/lib/data-source";
 import { Catalog } from "@/components/catalog";
 import { pageMetadata } from "@/lib/site";
 export async function generateMetadata({
@@ -8,6 +8,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { categories } = snapshot;
   const { slug } = await params;
   const category = categories.find((category) => category.slug === slug);
   if (!category) notFound();
@@ -18,13 +20,17 @@ export async function generateMetadata({
   });
 }
 export const dynamicParams = false;
-export const generateStaticParams = () =>
-  categories.map((c) => ({ slug: c.slug }));
+export async function generateStaticParams() {
+  const { categories } = await getPublicCatalogSnapshot();
+  return categories.map(item => ({ slug: item.slug }));
+}
 export default async function CategoryPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const snapshot = await getPublicCatalogSnapshot();
+  const { categories, products: publishedProducts, collections } = snapshot;
   const { slug } = await params;
   const category = categories.find((c) => c.slug === slug);
   if (!category) notFound();
@@ -38,7 +44,7 @@ export default async function CategoryPage({
         <h1>{category.name}</h1>
         <p>{category.description}</p>
       </div>
-      <Catalog pageType="category" items={publishedProducts.filter((p) => p.category === slug)} />
+      <Catalog categories={categories} collections={collections} pageType="category" items={publishedProducts.filter((p) => p.category === slug)} />
     </div>
   );
 }
