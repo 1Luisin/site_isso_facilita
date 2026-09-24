@@ -47,7 +47,7 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 - `/v/[codigo]`: produtos do conteúdo publicado `001`.
 - `/colecao/[slug]`: coleções navegáveis.
 
-A rota demonstrativa `/admin` foi removida e não é exportada. O bloqueio preventivo no robots permanece. Um admin real com autenticação será implementado em etapa futura.
+As rotas `/admin/login` e `/admin` oferecem login e dashboard real protegidos por Supabase Auth + RLS. Não aparecem na navegação pública nem no sitemap e têm noindex/nofollow. O painel ainda não possui CRUD; consulte [Auth administrativo](docs/admin-auth.md).
 
 ## Onde editar
 
@@ -61,9 +61,9 @@ A rota demonstrativa `/admin` foi removida e não é exportada. O bloqueio preve
 
 Os cinco produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
 
-Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Analytics é opcional; não existe painel administrativo público.
+Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Analytics é opcional; o shell administrativo exige perfil ativo owner/editor.
 
-O banco Supabase foi preparado na Etapa 9. Não há backend de runtime, autenticação, painel ou redirecionamento `/go` no site.
+O banco Supabase foi preparado na Etapa 9. Não há backend de runtime ou redirecionamento `/go` no site. O Auth/admin client-side está documentado em [admin-auth.md](docs/admin-auth.md).
 
 ## Fonte do catálogo
 
@@ -81,7 +81,7 @@ Importe `1Luisin/site_isso_facilita` pelo dashboard, com Framework Preset **Next
 
 Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. Configure `NEXT_PUBLIC_SITE_URL=https://issofacilita.app.br` em produção. Sem essa variável, a URL estável fornecida pela Vercel continua como fallback. Não copie a URL de validação do CI para a Vercel. A associação de domínio e o redirecionamento de www serão configurados externamente na Vercel, sem regras de redirecionamento no código.
 
-Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. A rota admin não deve existir na exportação.
+Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. As rotas admin são shells estáticos sem dados privilegiados no HTML; não aparecem na navegação pública e exigem sessão e perfil ativos no browser.
 
 ## Analytics e origem de tráfego
 
@@ -103,3 +103,7 @@ Links sugeridos (UTMs são lidas pelo GA; não há armazenamento próprio e cano
 `/privacidade` descreve analytics e afiliados. Quando habilitado, GA4 pode criar cookies próprios `_ga` e `_ga_<id>` (padrão de até dois anos, sujeito ao navegador/configuração), usando identificadores de navegador e sessão. Não adicionamos localStorage, armazenamento de UTMs, Google Ads ou Google Signals. O envio ao Google envolve informações técnicas de rede; os eventos personalizados não adicionam IP ou identificação do visitante.
 
 Esta etapa não implementa banner nem gestão de consentimento: um ID válido ativa o GA sem aguardar uma escolha do visitante. Antes de ativar o ID real, avalie a base legal, consentimento prévio para cookies não essenciais, recusa/revogação, retenção e compartilhamento internacional. Se o consentimento for a base adotada, implemente o bloqueio do GA até a autorização; a página de privacidade, sozinha, não substitui isso. Mantenha o ID vazio até concluir essa avaliação. Referências: [cookies do GA4](https://support.google.com/analytics/answer/11397207) e [guia da ANPD](https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia_orientativo_cookies_e_protecao_de_dados_pessoais).
+
+## Admin/Auth
+
+Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` para habilitar o login em `/admin/login`. São variáveis públicas diferentes das usadas pelo catálogo no build; use somente publishable key. Sem elas, o build passa e o admin indica Auth não configurado. Mantenha signups desligados no Dashboard Supabase. O primeiro owner é criado por bootstrap privilegiado; a interface não cria usuários nem altera roles. Veja [arquitetura, permissões e validações](docs/admin-auth.md).

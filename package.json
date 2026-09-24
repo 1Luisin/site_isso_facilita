@@ -10,7 +10,8 @@
     "check:social": "npm run generate:social && node scripts/check-social-assets.mjs",
     "check": "npm run lint && npm run build",
     "check:data-parity": "node --env-file-if-exists=.env.local --conditions=react-server scripts/check-data-parity.mjs",
-    "test:data-source": "node --conditions=react-server --test scripts/data-source.test.mjs"
+    "test:data-source": "node --conditions=react-server --test scripts/data-source.test.mjs",
+    "test:admin": "node --test scripts/admin-access.test.mjs"
   },
   "dependencies": {
     "@next/third-parties": "16.3.6",
