@@ -94,7 +94,7 @@ for (const video of publishedVideos)
     await social(
       `carrossel-${video.code}`,
       video.title,
-      `PRODUTOS DO CARROSSEL #${video.code}`,
+      `PRODUTOS DO ${video.contentType === "video" ? "VÍDEO" : "CARROSSEL"} #${video.code}`,
       video.cover,
     );
   }

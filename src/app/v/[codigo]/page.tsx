@@ -15,7 +15,7 @@ export async function generateMetadata({
   const video = contents.find((video) => video.code === codigo);
   if (!video) notFound();
   return pageMetadata({
-    title: `Produtos do carrossel #${video.code}`,
+    title: `Produtos do ${video.contentType === "video" ? "vídeo" : "carrossel"} #${video.code}`,
     description: video.description,
     path: `/v/${video.code}`,
     image: video.cover ? `/social/carrossel-${video.code}.jpg` : undefined,

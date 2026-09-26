@@ -121,6 +121,76 @@ export const products: Product[] = [
     collections: ["Setup minimalista", "Achadinhos até R$30"],
   },
   {
+    slug: "keycap-patinha-de-gato",
+    published: true,
+    affiliateUrl: "https://s.shopee.com.br/1Lfyc905mR",
+    name: "Keycap patinha de gato",
+    image: "/products/keycap-patinha-de-gato.webp",
+    category: "setup",
+    price: 0,
+    art: "",
+    color: "pink",
+    description:
+      "Keycap decorativa em formato de patinha de gato para deixar o teclado mais fofo e com a sua personalidade. Confira no anúncio as opções e a compatibilidade.",
+    collections: ["Setup rosa", "Home office feminino"],
+  },
+  {
+    slug: "headset-gamer-rosa",
+    published: true,
+    affiliateUrl: "https://s.shopee.com.br/5LC7NqOqaS",
+    name: "Headset gamer rosa",
+    image: "/products/headset-gamer-rosa.webp",
+    category: "eletronicos",
+    price: 0,
+    art: "",
+    color: "pink",
+    description:
+      "Headset gamer rosa com microfone e iluminação para completar o setup. Consulte no anúncio as conexões e os recursos da versão escolhida.",
+    collections: ["Setup rosa", "Home office feminino"],
+  },
+  {
+    slug: "soundbar-gamer-rgb",
+    published: true,
+    affiliateUrl: "https://s.shopee.com.br/905Pl37pvZ",
+    name: "Soundbar gamer RGB",
+    image: "/products/soundbar-gamer-rgb.webp",
+    category: "eletronicos",
+    price: 0,
+    art: "",
+    color: "lilac",
+    description:
+      "Soundbar compacta com iluminação RGB para levar som e cor ao setup sem ocupar muito espaço. Confira no anúncio as formas de conexão.",
+    collections: ["Setup minimalista"],
+  },
+  {
+    slug: "mouse-sem-fio-attack-shark",
+    published: true,
+    affiliateUrl: "https://s.shopee.com.br/2LYVpWoAQt",
+    name: "Mouse sem fio Attack Shark com dock",
+    image: "/products/mouse-sem-fio-attack-shark.webp",
+    category: "setup",
+    price: 0,
+    art: "",
+    color: "cream",
+    description:
+      "Mouse sem fio branco da Attack Shark com base de carregamento iluminada. Consulte no anúncio as especificações e os itens incluídos.",
+    collections: ["Setup minimalista", "Home office feminino"],
+  },
+  {
+    slug: "teclado-mecanico-rgb-branco",
+    published: true,
+    affiliateUrl: "https://s.shopee.com.br/8V99CNFFu1",
+    name: "Teclado mecânico RGB branco",
+    image: "/products/teclado-mecanico-rgb-branco.webp",
+    category: "setup",
+    price: 0,
+    art: "",
+    color: "cream",
+    description:
+      "Teclado mecânico branco com iluminação RGB e controle giratório para dar um toque colorido ao setup. Confira no anúncio o layout e as opções disponíveis.",
+    collections: ["Setup minimalista", "Home office feminino"],
+  },
+  {
     slug: "organizador-de-cabos",
     published: false,
     name: "Organizador de cabos",
@@ -167,6 +237,7 @@ export const products: Product[] = [
 export const videos = [
   {
     code: "001",
+    contentType: "carousel" as const,
     published: true,
     cover: "/videos/carrossel-001.webp",
     instagramUrl: "https://www.instagram.com/p/Ddcj01vGOxd/?img_index=1",
@@ -185,6 +256,7 @@ export const videos = [
   },
   {
     code: "002",
+    contentType: "post" as const,
     published: false,
     title: "Mesa organizada, mente leve",
     description: "Pequenas facilidades para um home office mais gostoso.",
@@ -192,6 +264,7 @@ export const videos = [
   },
   {
     code: "003",
+    contentType: "post" as const,
     published: false,
     title: "Pequenos mimos para o seu setup",
     description: "Uma seleção de achadinhos para renovar os detalhes.",
@@ -202,6 +275,24 @@ export const videos = [
       "fita-led",
     ],
   },
+  {
+    code: "004",
+    contentType: "video" as const,
+    published: true,
+    cover: "/videos/video-004.webp",
+    instagramUrl:
+      "https://www.instagram.com/p/DdxMO4YmLGs/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==",
+    title: "5 achados pra dar um boost no seu PC",
+    description:
+      "Cinco achadinhos para deixar o seu setup mais bonito, divertido e completo.",
+    slugs: [
+      "keycap-patinha-de-gato",
+      "headset-gamer-rosa",
+      "soundbar-gamer-rgb",
+      "mouse-sem-fio-attack-shark",
+      "teclado-mecanico-rgb-branco",
+    ],
+  },
 ];
 export const publishedProducts = products.filter(
   (product) => product.published,
@@ -210,7 +301,7 @@ export const categoriesWithPublishedProducts = categories.filter((category) =>
   publishedProducts.some((product) => product.category === category.slug),
 );
 export const publishedVideos = videos.filter((video) => video.published);
-export const currentVideoCode = "001";
+export const currentVideoCode = "004";
 export const latestVideo = (() => {
   const video = publishedVideos.find(
     (video) => video.code === currentVideoCode,

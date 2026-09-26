@@ -17,7 +17,7 @@ export function getStaticSnapshot(): PublicCatalogSnapshot {
       ...c, description: "", slugs: products.filter(p => p.collections.includes(c.name)).map(p => p.slug),
     })),
     contents: publishedVideos.map(c => ({
-      code: c.code, contentType: "carousel", title: c.title, description: c.description,
+      code: c.code, contentType: c.contentType, title: c.title, description: c.description,
       cover: c.cover, mobileCover: c.cover?.replace(".webp", "-540.webp"),
       links: { ...(c.instagramUrl ? { instagram: c.instagramUrl } : {}), ...(c.tiktokUrl ? { tiktok: c.tiktokUrl } : {}) },
       slugs: c.slugs.filter(slug => products.some(p => p.slug === slug)),

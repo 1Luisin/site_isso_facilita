@@ -126,7 +126,7 @@ export default async function Home() {
                 <Link
                   className="video-cover"
                   href={"/v/" + v.code}
-                  aria-label={"Ver produtos do carrossel #" + v.code}
+                  aria-label={`Ver produtos do ${v.contentType === "video" ? "vídeo" : "carrossel"} #${v.code}`}
                 >
                   <picture>
                     <source
@@ -136,7 +136,7 @@ export default async function Home() {
                     />
                     <Image
                       src={v.cover}
-                      alt="Setup bonito do zero sem gastar uma fortuna — capa do carrossel #001"
+                      alt={`${v.title} — capa do ${v.contentType === "video" ? "vídeo" : "carrossel"} #${v.code}`}
                       width={1080}
                       height={1350}
                       sizes="(max-width: 580px) calc(100vw - 38px), 280px"
@@ -149,10 +149,10 @@ export default async function Home() {
                 <h3>{v.title}</h3>
                 <p>{v.description}</p>
                 <p className="muted">
-                  {productsBySlugs(snapshot, v.slugs).length} achadinhos neste carrossel
+                  {productsBySlugs(snapshot, v.slugs).length} achadinhos neste {v.contentType === "video" ? "vídeo" : "carrossel"}
                 </p>
                 <Link className="primary-button" href={"/v/" + v.code}>
-                  Ver produtos do carrossel ↗
+                  Ver produtos do {v.contentType === "video" ? "vídeo" : "carrossel"} ↗
                 </Link>
                 <div
                   className="video-social-links"

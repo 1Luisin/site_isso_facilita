@@ -26,9 +26,9 @@ test("snapshot público e memoização não carregam preços ou rascunhos", asyn
   process.env.SITE_DATA_SOURCE = "static";
   const [a,b] = await Promise.all([getPublicCatalogSnapshot(),getPublicCatalogSnapshot()]);
   assert.strictEqual(a,b);
-  assert.equal(a.products.length,5);
-  assert.equal(a.contents.length,1);
-  assert.equal(a.settings.featuredContentCode,"001");
+  assert.equal(a.products.length,10);
+  assert.equal(a.contents.length,2);
+  assert.equal(a.settings.featuredContentCode,"004");
   assert.ok(a.products.every(p => !("price" in p) && !("published" in p)));
 });
 
@@ -79,3 +79,4 @@ for (const [name, change, expected] of [
     await assert.rejects(validateSnapshot(snapshot), expected);
   });
 }
+
