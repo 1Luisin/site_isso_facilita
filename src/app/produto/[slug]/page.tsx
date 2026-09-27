@@ -1,3 +1,4 @@
+import { socialImage } from "@/lib/social-image";
 import { AffiliateLink } from "@/components/affiliate-link";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,11 +20,10 @@ export async function generateMetadata({
     title: product.name,
     description: product.description,
     path: `/produto/${product.slug}`,
-    image: product.image ? `/social/produto-${product.slug}.jpg` : undefined,
+    image: socialImage(`/social/produto-${product.slug}.jpg`),
     imageAlt: product.name,
   });
 }
-export const dynamicParams = false;
 export async function generateStaticParams() {
   const { products: publishedProducts } = await getPublicCatalogSnapshot();
   return publishedProducts.map(item => ({ slug: item.slug }));

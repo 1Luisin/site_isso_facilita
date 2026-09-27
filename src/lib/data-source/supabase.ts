@@ -1,11 +1,11 @@
 import "server-only";
-import { createPublicBuildClient } from "../supabase/public.ts";
+import { createPublicServerClient } from "../supabase/public.ts";
 import { productPresentation } from "./presentation.ts";
 import type { Tables } from "../supabase/database.types.ts";
 import type { PublicCatalogSnapshot, Content } from "./types.ts";
 
 export async function getSupabaseSnapshot(): Promise<PublicCatalogSnapshot> {
-  const db = createPublicBuildClient();
+  const db = createPublicServerClient();
   // Stable ordering and pagination avoid silently truncating the catalog at the API limit.
   async function read<T>(table: string, page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { code?: string } | null }>) {
     const rows: T[] = [];

@@ -22,7 +22,6 @@ export async function generateMetadata({
     path: `/colecao/${collection.slug}`,
   });
 }
-export const dynamicParams = false;
 export async function generateStaticParams() {
   const { collections: publishedCollections } = await getPublicCatalogSnapshot();
   return publishedCollections.map(item => ({ slug: item.slug }));

@@ -1,6 +1,5 @@
 import "server-only";
-import { stat } from "node:fs/promises";
-import path from "node:path";
+import assets from "../public-assets.json" with { type: "json" };
 import type { PublicCatalogSnapshot } from "./types.ts";
 
 export async function validateSnapshot(snapshot: PublicCatalogSnapshot) {
@@ -28,7 +27,6 @@ export async function validateSnapshot(snapshot: PublicCatalogSnapshot) {
     if (p.collections.some(name => !snapshot.collections.some(c => c.name === name && c.slugs.includes(p.slug)))) fail(`coleções inconsistentes em ${p.slug}`);
     files.add(p.image);
     if (p.mobileImage) files.add(p.mobileImage);
-    files.add(`/social/produto-${p.slug}.jpg`);
   }
   for (const c of [...snapshot.collections, ...snapshot.contents]) {
     unique(c.slugs, "produtos associados");
@@ -37,18 +35,15 @@ export async function validateSnapshot(snapshot: PublicCatalogSnapshot) {
   for (const c of snapshot.contents) {
     if (!c.slugs.length) fail(`conteúdo #${c.code} sem produtos`);
     if (!["carousel","video","post","short"].includes(c.contentType)) fail(`tipo de conteúdo inválido: #${c.code}`);
-    if (c.cover) { files.add(c.cover); files.add(`/social/carrossel-${c.code}.jpg`); }
+    if (c.cover) { files.add(c.cover); }
     if (c.mobileCover) files.add(c.mobileCover);
     Object.values(c.links).forEach(url);
   }
   Object.values(snapshot.settings.links).forEach(url);
   if (!snapshot.contents.some(c => c.code === snapshot.settings.featuredContentCode)) fail("conteúdo destacado ausente ou inacessível");
-  const root = path.resolve(process.cwd(), "public");
-  await Promise.all([...files].map(async file => {
+  for (const file of files) {
     if (!/^\/(products|videos|social)\/[a-zA-Z0-9_-]+\.(webp|png|jpe?g)$/.test(file)) fail("caminho de imagem local inválido");
-    try {
-      if (!(await stat(path.join(root, file.slice(1)))).isFile()) fail(`asset não é arquivo: ${file}`);
-    } catch { fail(`asset local ausente: ${file}; revise imagens e geração social antes de publicar`); }
-  }));
+    if (!assets.includes(file)) fail(`asset local ausente: ${file}; publique o arquivo antes de usar este caminho`);
+  }
   return snapshot;
 }

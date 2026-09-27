@@ -1,3 +1,4 @@
+import { socialImage } from "@/lib/social-image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPublicCatalogSnapshot } from "@/lib/data-source";
@@ -18,11 +19,10 @@ export async function generateMetadata({
     title: `Produtos do ${video.contentType === "video" ? "vídeo" : "carrossel"} #${video.code}`,
     description: video.description,
     path: `/v/${video.code}`,
-    image: video.cover ? `/social/carrossel-${video.code}.jpg` : undefined,
+    image: socialImage(`/social/carrossel-${video.code}.jpg`),
     imageAlt: video.title,
   });
 }
-export const dynamicParams = false;
 export async function generateStaticParams() {
   const { contents } = await getPublicCatalogSnapshot();
   return contents.map(item => ({ codigo: item.code }));

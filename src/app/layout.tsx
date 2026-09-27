@@ -1,12 +1,11 @@
 import { getPublicCatalogSnapshot } from "@/lib/data-source";
 import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { gaMeasurementId } from "@/lib/analytics-config";
 import { site, pageMetadata } from "@/lib/site";
 import "./globals.css";
-// Read fresh catalog data at build time without opting into runtime rendering.
-export const dynamic = "force-static";
 export const metadata: Metadata = {
   ...pageMetadata({
     title: site.title,
@@ -25,12 +24,18 @@ export const metadata: Metadata = {
   },
   description: site.description,
 };
+async function currentYear() {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { settings } = await getPublicCatalogSnapshot();
+  const year = await currentYear();
   return (
     <html lang={site.language}>
       <body>
@@ -65,7 +70,7 @@ export default async function RootLayout({
           <p>
             {settings.footerText}
           </p>
-          <small>© {new Date().getFullYear()} {settings.name}</small>
+          <small>© {year} {settings.name}</small>
           <p><Link href="/privacidade">Política de Privacidade</Link></p>
         </footer>
         {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}

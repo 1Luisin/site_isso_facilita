@@ -1,3 +1,5 @@
+> Etapa 12: o catálogo público agora usa runtime/cache Next.js; veja [dynamic-site.md](dynamic-site.md). O Auth client-side e suas permissões permanecem. Referências a static export abaixo registram a validação original da Etapa 11.
+
 # Auth e shell administrativo — Etapa 11
 
 `/admin/login` e `/admin` são exportados estaticamente. O HTML contém somente a

@@ -19,7 +19,6 @@ export async function generateMetadata({
     path: `/categoria/${category.slug}`,
   });
 }
-export const dynamicParams = false;
 export async function generateStaticParams() {
   const { categories } = await getPublicCatalogSnapshot();
   return categories.map(item => ({ slug: item.slug }));

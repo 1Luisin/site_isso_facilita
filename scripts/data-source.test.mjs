@@ -3,29 +3,29 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { getStaticSnapshot } from "../src/lib/data-source/static.ts";
 import { validateSnapshot } from "../src/lib/data-source/validate.ts";
-import { resolveDataSource, getPublicCatalogSnapshot } from "../src/lib/data-source/index.ts";
+import { resolveDataSource, loadPublicCatalogSnapshot } from "../src/lib/data-source/load.ts";
 import { publicSupabaseConfig } from "../src/lib/supabase/public.ts";
-import { createBuildFetch } from "../src/lib/supabase/build-fetch.ts";
+import { createPublicFetch } from "../src/lib/supabase/public-fetch.ts";
 
 test("modo Supabase sem configuração falha sem retornar o snapshot static", () => {
   const result = spawnSync(process.execPath, ["--conditions=react-server", "--input-type=module", "-e",
-    'import { getPublicCatalogSnapshot } from "./src/lib/data-source/index.ts"; try { await getPublicCatalogSnapshot(); } catch (error) { console.error(error.message); process.exitCode = 1; }',
+    'import { loadPublicCatalogSnapshot } from "./src/lib/data-source/load.ts"; try { await loadPublicCatalogSnapshot(); } catch (error) { console.error(error.message); process.exitCode = 1; }',
   ], { encoding: "utf8", env: { ...process.env, SITE_DATA_SOURCE: "supabase", SUPABASE_URL: "", SUPABASE_PUBLISHABLE_KEY: "" } });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /defina SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY/);
 });
 
 test("transporte rejeita escrita e outra origem antes de acessar rede", async () => {
-  const fetch = createBuildFetch("https://example.com");
+  const fetch = createPublicFetch("https://example.com");
   await assert.rejects(fetch("https://example.com/rest/v1/products", { method: "POST" }), /somente leitura/);
   await assert.rejects(fetch("https://other.example.com/rest/v1/products"), /somente leitura/);
   await assert.rejects(fetch("https://example.com/auth/v1/user"), /somente leitura/);
 });
 
-test("snapshot público e memoização não carregam preços ou rascunhos", async () => {
+test("snapshot público não carrega preços ou rascunhos", async () => {
   process.env.SITE_DATA_SOURCE = "static";
-  const [a,b] = await Promise.all([getPublicCatalogSnapshot(),getPublicCatalogSnapshot()]);
-  assert.strictEqual(a,b);
+  const [a,b] = await Promise.all([loadPublicCatalogSnapshot(),loadPublicCatalogSnapshot()]);
+  assert.deepStrictEqual(a,b);
   assert.equal(a.products.length,10);
   assert.equal(a.contents.length,2);
   assert.equal(a.settings.featuredContentCode,"004");
@@ -80,3 +80,19 @@ for (const [name, change, expected] of [
   });
 }
 
+test("transporte evita cache HTTP independente e mantém timeout/redirect seguro", async () => {
+  const original = globalThis.fetch;
+  let options;
+  globalThis.fetch = async (_input, init) => { options = init; return Response.json([]); };
+  try {
+    await createPublicFetch("https://example.com")("https://example.com/rest/v1/products");
+    assert.equal(options.cache,"no-store");
+    assert.equal(options.redirect,"error");
+    assert.ok(options.signal instanceof AbortSignal);
+  } finally { globalThis.fetch = original; }
+});
+test("novo produto pode reutilizar imagem local sem asset social específico", async () => {
+  const snapshot = structuredClone(getStaticSnapshot());
+  snapshot.products.push({ ...snapshot.products[0], slug:"novo-slug", collections:[] });
+  assert.equal((await validateSnapshot(snapshot)).products.length,11);
+});

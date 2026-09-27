@@ -1,6 +1,6 @@
 # Isso Facilita!
 
-Catálogo estático em Next.js App Router + TypeScript, com CSS global e imagens otimizadas. A fonte editorial pode ser local ou Supabase, consultado somente durante o build. Publicados atualmente: carrossel #001 e seus cinco produtos. Os demais produtos e conteúdos #002/#003 são rascunhos, ausentes do catálogo e das páginas públicas de produtos/conteúdos.
+Catálogo em Next.js App Router + TypeScript, com CSS global e imagens otimizadas. A fonte editorial pode ser local ou Supabase, consultado no servidor com cache editorial. Publicados atualmente: conteúdos #001 e #004, com dez produtos. Os demais produtos e conteúdos #002/#003 são rascunhos, ausentes do catálogo e das páginas públicas de produtos/conteúdos.
 
 ## Executar
 
@@ -21,7 +21,7 @@ npm run build
 Remove-Item Env:NEXT_PUBLIC_SITE_URL
 ```
 
-O build exporta o site estático em `out/`. Para produção, sirva essa pasta com um servidor de arquivos estáticos. `next start` não é compatível com `output: 'export'`.
+O build prepara o runtime Next.js em `.next/`. Execute `npm run start` para validar produção localmente. Não publique `out/`; a Vercel deve usar o preset Next.js normal.
 
 ## Configuração da URL pública
 
@@ -31,7 +31,7 @@ Essa URL determina canonical, sitemap, robots e URLs das imagens sociais. Ao def
 
 ## CI e assets sociais
 
-A workflow `.github/workflows/ci.yml` roda em pull requests e pushes para `main`: instala com `npm ci`, executa lint, regenera e verifica os assets sociais e valida o build estático. Usa cache npm, permissão somente de leitura e cancela execuções anteriores da mesma branch/PR. Não faz deploy, upload de `out/` nem commits; não precisa de secrets. `.next/` e `out/` continuam ignorados.
+A workflow `.github/workflows/ci.yml` roda em pull requests e pushes para `main`: instala com `npm ci`, executa lint, regenera e verifica os assets sociais e valida o build Next.js. Usa cache npm, permissão somente de leitura e cancela execuções anteriores da mesma branch/PR. Não faz deploy, upload de `out/` nem commits; não precisa de secrets. `.next/` e `out/` continuam ignorados.
 
 Ao publicar ou alterar produtos, vídeos ou suas imagens, execute `npm run generate:social` e versione os assets gerados junto com os dados. `npm run check:social` regenera e usa `git diff --exit-code HEAD` para detectar diferenças, inclusive staged, além de detectar arquivos novos não versionados. Uma diferença faz o CI falhar com instruções de correção. `npm run check` executa lint e build (requer a variável de URL).
 
@@ -44,7 +44,7 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 - `/`: catálogo, busca, filtros e seleções.
 - `/produto/[slug]`: detalhes de cada produto.
 - `/categoria/[slug]`: categoria com busca e filtros.
-- `/v/[codigo]`: produtos do conteúdo publicado `001`.
+- `/v/[codigo]`: produtos de cada conteúdo publicado.
 - `/colecao/[slug]`: coleções navegáveis.
 
 As rotas `/admin/login` e `/admin` oferecem login e dashboard real protegidos por Supabase Auth + RLS. Não aparecem na navegação pública nem no sitemap e têm noindex/nofollow. O painel ainda não possui CRUD; consulte [Auth administrativo](docs/admin-auth.md).
@@ -59,19 +59,19 @@ As rotas `/admin/login` e `/admin` oferecem login e dashboard real protegidos po
 - `src/app/layout.tsx`: header, navegação, metadados e aviso de afiliado.
 - `src/app/**/page.tsx`: páginas e geração estática das rotas.
 
-Os cinco produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
+Os dez produtos públicos usam imagens WebP em `public/products/` e links reais de afiliado. Preços internos demonstrativos não são exibidos: o visitante consulta o preço na loja. Ao alterar imagens, preserve as variantes responsivas e regenere os assets sociais. Rascunhos permanecem em `data.ts`, sem preencher o catálogo público.
 
 Busca ignora acentos e diferenças entre maiúsculas/minúsculas. Categorias e coleções podem ser combinadas. Favoritos são apenas estado temporário do componente, sem conta ou armazenamento. Analytics é opcional; o shell administrativo exige perfil ativo owner/editor.
 
-O banco Supabase foi preparado na Etapa 9. Não há backend de runtime ou redirecionamento `/go` no site. O Auth/admin client-side está documentado em [admin-auth.md](docs/admin-auth.md).
+O banco Supabase foi preparado na Etapa 9. Há leitura pública no runtime Next.js com cache; não há redirecionamento `/go`. O Auth/admin client-side está documentado em [admin-auth.md](docs/admin-auth.md).
 
 ## Fonte do catálogo
 
-`SITE_DATA_SOURCE=static` (também o padrão quando ausente) usa `data.ts`. Para leitura pública do banco durante o build, use `SITE_DATA_SOURCE=supabase`, `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` no ambiente local/Vercel. Essas variáveis não usam `NEXT_PUBLIC_`: o browser recebe somente dados públicos já renderizados. Configuração ausente/inválida ou dados inconsistentes fazem o build Supabase falhar, sem fallback. O CI continua no modo static e não depende do banco.
+`SITE_DATA_SOURCE=static` (também o padrão quando ausente) usa `data.ts`. Para leitura pública do banco no servidor (build e runtime), use `SITE_DATA_SOURCE=supabase`, `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` no ambiente local/Vercel. Essas variáveis não usam `NEXT_PUBLIC_`: o browser recebe somente dados públicos já renderizados. Configuração ausente/inválida ou dados inconsistentes fazem a leitura Supabase falhar, sem fallback. O CI continua no modo static e não depende do banco.
 
 `npm run check:data-parity` compara as duas fontes usando as variáveis locais (aceita `.env.local`, ignorado pelo Git). `npm run test:data-source` verifica validações sem rede. Veja [a configuração e validação completas](docs/data-source.md).
 
-**Editar o banco não atualiza imediatamente o site:** banco alterado → novo build/deploy → HTML atualizado. Rollback: selecionar `SITE_DATA_SOURCE=static` e gerar novo build. Não há Deploy Hook.
+**Atualização editorial:** banco → cache Next.js → visitante. O fallback temporal revalida após 300 segundos quando há acesso. A futura escrita administrativa autenticada deverá invalidar `public-catalog` para atualização imediata. Ainda não há CRUD ou endpoint de invalidação. Rollback editorial: `SITE_DATA_SOURCE=static`. Veja [arquitetura dinâmica](docs/dynamic-site.md).
 
 **Limitação editorial:** o gerador social ainda usa `data.ts`. Antes de o futuro admin se tornar a fonte editorial exclusiva, ele deverá consumir o mesmo snapshot Supabase ou um derivado, para atualizar Open Graph junto com nomes/capas/produtos. Até lá, mantenha paridade editorial e regenere os assets locais.
 
@@ -81,7 +81,7 @@ Importe `1Luisin/site_isso_facilita` pelo dashboard, com Framework Preset **Next
 
 Habilite **Enable access to System Environment Variables** na área **Environment Variables** do projeto. Configure `NEXT_PUBLIC_SITE_URL=https://issofacilita.app.br` em produção. Sem essa variável, a URL estável fornecida pela Vercel continua como fallback. Não copie a URL de validação do CI para a Vercel. A associação de domínio e o redirecionamento de www serão configurados externamente na Vercel, sem regras de redirecionamento no código.
 
-Confira Home, cinco produtos, #001, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. As rotas admin são shells estáticos sem dados privilegiados no HTML; não aparecem na navegação pública e exigem sessão e perfil ativos no browser.
+Confira Home, dez produtos, #001 e #004, favicon, imagens, links de afiliado, páginas de produto/vídeo, robots e sitemap. No HTML, canonical e og:image devem usar a origem de produção. As rotas admin são shells estáticos sem dados privilegiados no HTML; não aparecem na navegação pública e exigem sessão e perfil ativos no browser.
 
 ## Analytics e origem de tráfego
 

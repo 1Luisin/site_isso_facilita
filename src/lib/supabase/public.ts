@@ -1,12 +1,12 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types.ts";
-import { createBuildFetch } from "./build-fetch.ts";
+import { createPublicFetch } from "./public-fetch.ts";
 
 export function publicSupabaseConfig() {
   const value = process.env.SUPABASE_URL?.trim();
   const key = process.env.SUPABASE_PUBLISHABLE_KEY?.trim();
-  if (!value || !key) throw new Error("Catálogo Supabase: defina SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY no ambiente de build.");
+  if (!value || !key) throw new Error("Catálogo Supabase: defina SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY no ambiente do servidor.");
   let url: URL;
   try { url = new URL(value); } catch { throw new Error("Catálogo Supabase: SUPABASE_URL inválida."); }
   if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash)
@@ -16,12 +16,12 @@ export function publicSupabaseConfig() {
   return { url: url.origin, key };
 }
 
-export function createPublicBuildClient() {
+export function createPublicServerClient() {
   const { url, key } = publicSupabaseConfig();
   return createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     // No session/JWT. No auth calls, channels or realtime subscriptions.
     accessToken: async () => null,
-    global: { fetch: createBuildFetch(url) },
+    global: { fetch: createPublicFetch(url) },
   });
 }

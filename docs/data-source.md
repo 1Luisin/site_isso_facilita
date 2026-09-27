@@ -1,3 +1,5 @@
+> Histórico da Etapa 10: cache, transporte e publicação foram substituídos pela [Etapa 12](dynamic-site.md). A interface dos adapters e regras de RLS permanecem.
+
 # Catálogo público no build — Etapa 10
 
 O site continua com `output: "export"`. Não há consultas Supabase no browser,
