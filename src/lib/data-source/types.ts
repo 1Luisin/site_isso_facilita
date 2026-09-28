@@ -1,7 +1,7 @@
 export type Category = { slug: string; name: string; symbol: string; description: string };
 export type Product = {
   slug: string; name: string; description: string; category: string; categoryName: string;
-  collections: string[]; affiliateUrl: string; image: string; mobileImage?: string;
+  collections: string[]; affiliateUrl: string; image: string; mobileImage?: string; imageAlt?: string;
   art: string; color: string;
 };
 export type Collection = { slug: string; name: string; description: string; styleIndex: number; slugs: string[] };

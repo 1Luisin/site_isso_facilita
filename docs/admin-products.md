@@ -1,3 +1,5 @@
+> Atualização Etapa 14: upload, substituição e remoção de imagens agora estão disponíveis. Veja [product-storage.md](product-storage.md). Os limites de Storage descritos abaixo registram o estado histórico da Etapa 13.
+
 # Produtos administrativos — Etapa 13
 
 ## Rotas e acesso

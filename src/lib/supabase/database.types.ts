@@ -367,6 +367,7 @@ export type Database = {
           mobile_storage_path: string | null
           product_id: string
           sort_order: number
+          storage_bucket: string | null
           storage_path: string
           updated_at: string
         }
@@ -378,6 +379,7 @@ export type Database = {
           mobile_storage_path?: string | null
           product_id: string
           sort_order?: number
+          storage_bucket?: string | null
           storage_path: string
           updated_at?: string
         }
@@ -389,6 +391,7 @@ export type Database = {
           mobile_storage_path?: string | null
           product_id?: string
           sort_order?: number
+          storage_bucket?: string | null
           storage_path?: string
           updated_at?: string
         }
@@ -508,6 +511,10 @@ export type Database = {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: string
       }
+      admin_remove_product_image: {
+        Args: { p_expected_updated_at: string; p_id: string }
+        Returns: Json
+      }
       admin_save_product: {
         Args: {
           p_affiliate_url: string
@@ -522,6 +529,17 @@ export type Database = {
           p_slug: string
         }
         Returns: string
+      }
+      admin_set_product_image: {
+        Args: {
+          p_alt: string
+          p_bucket: string
+          p_expected_updated_at: string
+          p_id: string
+          p_main: string
+          p_mobile: string
+        }
+        Returns: Json
       }
     }
     Enums: {

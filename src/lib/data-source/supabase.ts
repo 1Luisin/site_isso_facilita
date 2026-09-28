@@ -3,6 +3,8 @@ import { createPublicServerClient } from "../supabase/public.ts";
 import { productPresentation } from "./presentation.ts";
 import type { Tables } from "../supabase/database.types.ts";
 import type { PublicCatalogSnapshot, Content } from "./types.ts";
+import { mediaUrl } from "../product-media/paths.ts";
+import { publicSupabaseConfig } from "../supabase/public.ts";
 
 export async function getSupabaseSnapshot(): Promise<PublicCatalogSnapshot> {
   const db = createPublicServerClient();
@@ -60,7 +62,9 @@ export async function getSupabaseSnapshot(): Promise<PublicCatalogSnapshot> {
       const image = primary(images.filter(i => i.product_id === p.id && i.is_primary), `produto ${p.slug} sem imagem principal ou duplicada`);
       return {
         slug:p.slug, name:p.name, description:p.description ?? "", category:category.slug, categoryName:category.name,
-        affiliateUrl:link.url, image:image.storage_path, mobileImage:image.mobile_storage_path ?? undefined,
+        affiliateUrl:link.url, image:mediaUrl(publicSupabaseConfig().url,image.storage_bucket,image.storage_path),
+        mobileImage:image.mobile_storage_path ? mediaUrl(publicSupabaseConfig().url,image.storage_bucket,image.mobile_storage_path) : undefined,
+        imageAlt:image.alt_text || p.name,
         collections:collections.filter(c => collectionProducts.some(r => r.collection_id === c.id && r.product_id === p.id)).map(c => c.name),
         ...productPresentation(p.slug),
       };

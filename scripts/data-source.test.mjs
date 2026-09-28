@@ -6,6 +6,21 @@ import { validateSnapshot } from "../src/lib/data-source/validate.ts";
 import { resolveDataSource, loadPublicCatalogSnapshot } from "../src/lib/data-source/load.ts";
 import { publicSupabaseConfig } from "../src/lib/supabase/public.ts";
 import { createPublicFetch } from "../src/lib/supabase/public-fetch.ts";
+import { mediaKeys,mediaUrl } from "../src/lib/product-media/paths.ts";
+
+test("snapshot permite Storage controlado e rejeita outra origem",async()=>{
+  const previous=process.env.SUPABASE_URL;
+  try{
+    process.env.SUPABASE_URL="https://media-test.example.com";
+    const snapshot=getStaticSnapshot();
+    const keys=mediaKeys("10000000-0000-4000-8000-000000000001","20000000-0000-4000-8000-000000000002");
+    snapshot.products[0].image=mediaUrl(process.env.SUPABASE_URL,"catalog-media",keys.main);
+    snapshot.products[0].mobileImage=mediaUrl(process.env.SUPABASE_URL,"catalog-media",keys.mobile);
+    await validateSnapshot(snapshot);
+    snapshot.products[0].image=snapshot.products[0].image.replace("media-test.example.com","other.example.com");
+    await assert.rejects(validateSnapshot(snapshot),/imagem local inválido/);
+  }finally{if(previous===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=previous;}
+});
 
 test("modo Supabase sem configuração falha sem retornar o snapshot static", () => {
   const result = spawnSync(process.execPath, ["--conditions=react-server", "--input-type=module", "-e",

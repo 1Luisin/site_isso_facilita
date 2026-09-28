@@ -1,6 +1,7 @@
 import "server-only";
 import assets from "../public-assets.json" with { type: "json" };
 import type { PublicCatalogSnapshot } from "./types.ts";
+import { isMediaUrl } from "../product-media/paths.ts";
 
 export async function validateSnapshot(snapshot: PublicCatalogSnapshot) {
   const fail = (message: string): never => { throw new Error(`Catálogo público inválido: ${message}.`); };
@@ -42,6 +43,7 @@ export async function validateSnapshot(snapshot: PublicCatalogSnapshot) {
   Object.values(snapshot.settings.links).forEach(url);
   if (!snapshot.contents.some(c => c.code === snapshot.settings.featuredContentCode)) fail("conteúdo destacado ausente ou inacessível");
   for (const file of files) {
+    if (isMediaUrl(file,process.env.SUPABASE_URL ?? "")) continue;
     if (!/^\/(products|videos|social)\/[a-zA-Z0-9_-]+\.(webp|png|jpe?g)$/.test(file)) fail("caminho de imagem local inválido");
     if (!assets.includes(file)) fail(`asset local ausente: ${file}; publique o arquivo antes de usar este caminho`);
   }

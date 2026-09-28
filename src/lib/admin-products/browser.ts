@@ -1,6 +1,10 @@
 "use client";
 import { getBrowserSupabase } from "../supabase/browser";
 import type { Tables } from "../supabase/database.types";
+import { mediaUrl } from "../product-media/paths";
+export function adminImageUrl(image: Tables<"product_images">) {
+  return mediaUrl(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",image.storage_bucket,image.storage_path);
+}
 export type AdminProductData = {
   products: Tables<"products">[]; categories: Tables<"categories">[]; collections: Tables<"collections">[];
   links: Tables<"product_affiliate_links">[]; images: Tables<"product_images">[]; memberships: Tables<"collection_products">[];

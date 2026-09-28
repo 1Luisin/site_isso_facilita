@@ -7,7 +7,7 @@ export function getStaticSnapshot(): PublicCatalogSnapshot {
     slug: p.slug, name: p.name, description: p.description,
     category: p.category, categoryName: categories.find(c => c.slug === p.category)?.name ?? "",
     collections: publishedCollections.filter(c => p.collections.includes(c.name)).map(c => c.name),
-    affiliateUrl: p.affiliateUrl, image: p.image ?? "",
+    affiliateUrl: p.affiliateUrl, image: p.image ?? "", imageAlt:p.name,
     mobileImage: p.image?.replace(".webp", "-480.webp"), ...productPresentation(p.slug),
   }));
   return {

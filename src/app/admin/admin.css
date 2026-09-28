@@ -51,3 +51,8 @@
 .admin-delete { margin-top:24px; max-width:800px; }
 .admin-delete .admin-actions { margin-top:16px; }
 @media(max-width:600px){ .admin-product-filters { grid-template-columns:1fr; } .admin-product-row { grid-template-columns:56px minmax(0,1fr); gap:12px; } .admin-product-row img { width:56px; height:56px; } .admin-product-row > a { grid-column:2; } .admin-actions > button { max-width:100%; white-space:normal; } }
+
+.admin-media { display: grid; gap: 12px; min-width: 0; max-width: 800px; }
+.admin-media input { min-width: 0; width: 100%; max-width: 100%; box-sizing: border-box; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--paper); font:inherit; font-size:16px; color:var(--ink); }
+.admin-media input::file-selector-button { border:1px solid var(--line); border-radius:12px; background:var(--pink); color:var(--ink); padding:10px; margin-right:8px; cursor:pointer; }
+.admin-media-preview { width: 100%; max-width: 280px; height: 280px; object-fit: contain; }

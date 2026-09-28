@@ -20,7 +20,7 @@ export function ProductArt({
           />
           <Image
             src={product.image}
-            alt={product.name}
+            alt={product.imageAlt || product.name}
             fill
             sizes={sizes}
             loading={eager ? "eager" : "lazy"}

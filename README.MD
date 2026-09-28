@@ -106,4 +106,9 @@ Esta etapa não implementa banner nem gestão de consentimento: um ID válido at
 
 ## Admin/Auth
 
+Imagens de produtos já podem ser enviadas, substituídas e removidas pelo admin.
+O browser gera WebP principal/mobile no bucket público `catalog-media`; imagens
+locais antigas continuam válidas. Não há nova variável de ambiente. Veja
+[Storage de produtos, permissões e compensação de falhas](docs/product-storage.md).
+
 Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` para habilitar o login em `/admin/login`. São variáveis públicas diferentes das usadas pelo catálogo no build; use somente publishable key. Sem elas, o build passa e o admin indica Auth não configurado. Mantenha signups desligados no Dashboard Supabase. O primeiro owner é criado por bootstrap privilegiado; a interface não cria usuários nem altera roles. Veja [arquitetura, permissões e validações](docs/admin-auth.md).

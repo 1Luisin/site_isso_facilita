@@ -31,6 +31,9 @@ export function publicationProblems(categoryActive: boolean, imageExists: boolea
 export function productErrorMessage(error: unknown): string {
   if (error instanceof ProductError) return error.message;
   const e = error && typeof error === "object" ? error as { code?: string; message?: string } : {};
+  if(e.message === "unpublish_before_image_removal") return "Despublique o produto antes de remover a imagem.";
+  if(e.message === "image_upload_incomplete") return "O envio das duas imagens não foi confirmado. Tente novamente.";
+  if(e.message === "invalid_image_change") return "Confira os dados da imagem e reabra o produto.";
   if (e.code === "23505") return "Este slug já está em uso ou houve um conflito de ordem. Confira o slug e tente novamente.";
   if (e.code === "23503") return "Este produto possui histórico e não pode ser excluído. Despublique-o.";
   if (e.code === "40001") return "Este produto foi alterado em outra sessão. Reabra-o antes de salvar.";
