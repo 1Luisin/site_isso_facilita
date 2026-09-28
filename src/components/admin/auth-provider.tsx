@@ -50,14 +50,16 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         if (!disposed && ticket === revision.current) setAccess({ status: "error" });
       }
     };
-    const schedule = () => {
+    const schedule = (suspend = false) => {
       const ticket = ++revision.current;
-      setAccess({ status: "loading" });
+      // Keep mounted forms during routine profile checks; denial still removes access.
+      // Session expiry/account changes explicitly suspend the protected subtree.
+      setAccess(previous => !suspend && previous.status === "authorized" ? previous : { status: "loading" });
       clearTimeout(queued);
       // Defer outside the Auth callback to avoid SDK session-lock deadlocks.
       queued = setTimeout(() => { void validate(ticket); }, 0);
     };
-    refresh.current = schedule;
+    refresh.current = () => schedule(true);
     const { data: { subscription } } = client.auth.onAuthStateChange((_event, session) => {
       clearTimeout(expiry);
       if (!session) {
@@ -66,13 +68,14 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         setAccess({ status: "anonymous" });
         return;
       }
-      schedule();
+      schedule(_event !== "TOKEN_REFRESHED");
       if (session.expires_at) {
-        expiry = setTimeout(schedule, Math.max(0, Math.min(session.expires_at * 1000 - Date.now(), 2_147_483_647)));
+        expiry = setTimeout(() => schedule(true), Math.max(0, Math.min(session.expires_at * 1000 - Date.now(), 2_147_483_647)));
       }
     });
     const onVisible = () => { if (document.visibilityState === "visible") schedule(); };
-    window.addEventListener("focus", schedule);
+    const onFocus = () => schedule();
+    window.addEventListener("focus", onFocus);
     document.addEventListener("visibilitychange", onVisible);
     const interval = setInterval(onVisible, 60_000);
     // INITIAL_SESSION from the single listener handles initial validation.
@@ -83,7 +86,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       clearTimeout(expiry);
       clearInterval(interval);
       subscription.unsubscribe();
-      window.removeEventListener("focus", schedule);
+      window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);

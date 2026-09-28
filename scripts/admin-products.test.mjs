@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {validateProductInput,suggestSlug,publicationProblems,productErrorMessage,ProductError} from '../src/lib/admin-products/validation.ts';
+import {runProductMutation} from '../src/lib/admin-products/mutation.ts';
+import {PUBLIC_CATALOG_TAG} from '../src/lib/data-source/cache-policy.ts';
+const uuid='10000000-0000-4000-8000-000000000001';
+const valid={id:null,name:' Produto ',slug:'produto-rosa',description:' descrição ',category_id:uuid,published:false,affiliate_url:'https://s.shopee.com.br/exemplo',collection_ids:[],expected_updated_at:null};
+test('normaliza texto e sugere slug sem sobrescrever decisão manual',()=>{assert.equal(validateProductInput(valid).name,'Produto');assert.equal(suggestSlug('Luminária Rosa!'),'luminaria-rosa');});
+for(const [label,change] of Object.entries({slug:{slug:'A / B'},name:{name:' '},uuid:{category_id:'123'},collections:{collection_ids:['bad']},boolean:{published:'false'},https:{affiliate_url:'http://s.shopee.com.br/x'},credentials:{affiliate_url:'https://user:pass@s.shopee.com.br/x'},placeholder:{affiliate_url:'https://shopee.com.br/'},host:{affiliate_url:'https://shopee.com.br.evil.test/x'},createPublished:{published:true}}))test('rejeita '+label,()=>assert.throws(()=>validateProductInput({...valid,...change}),ProductError));
+test('pré-requisitos de publicação claros',()=>{assert.equal(publicationProblems(false,false,'').length,3);assert.deepEqual(publicationProblems(true,true,valid.affiliate_url),[]);});
+test('mensagens não revelam erro bruto',()=>{assert.match(productErrorMessage({code:'23505'}),/slug/);assert.match(productErrorMessage({code:'23503'}),/histórico/);assert.match(productErrorMessage({message:'image_required'}),/imagem/);assert.ok(!productErrorMessage({message:'private dump'}).includes('dump'));});
+test('commit bem-sucedido invalida tag somente depois da escrita',async()=>{const order=[];const result=await runProductMutation(async()=>{order.push('commit');return uuid;},tag=>order.push(tag));assert.equal(result.ok,true);assert.deepEqual(order,['commit',PUBLIC_CATALOG_TAG]);});
+test('falha não invalida cache',async()=>{let calls=0;const result=await runProductMutation(async()=>{throw new Error('failed');},()=>calls++);assert.equal(result.ok,false);assert.equal(calls,0);});

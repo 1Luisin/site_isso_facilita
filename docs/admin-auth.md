@@ -1,3 +1,5 @@
+> Atualização Etapa 13: CRUD de produtos disponível por Server Actions autenticadas; veja [admin-products.md](admin-products.md). O restante abaixo registra a implantação original de Auth.
+
 > Etapa 12: o catálogo público agora usa runtime/cache Next.js; veja [dynamic-site.md](dynamic-site.md). O Auth client-side e suas permissões permanecem. Referências a static export abaixo registram a validação original da Etapa 11.
 
 # Auth e shell administrativo — Etapa 11

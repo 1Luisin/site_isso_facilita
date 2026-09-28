@@ -504,7 +504,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_delete_product: {
+        Args: { p_expected_updated_at: string; p_id: string }
+        Returns: string
+      }
+      admin_save_product: {
+        Args: {
+          p_affiliate_url: string
+          p_category_id: string
+          p_collection_ids: string[]
+          p_description: string
+          // Nullable when creating a draft (Postgres RPC arguments allow NULL).
+          p_expected_updated_at: string | null
+          p_id: string | null
+          p_name: string
+          p_published: boolean
+          p_slug: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

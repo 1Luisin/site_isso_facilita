@@ -47,7 +47,7 @@ Para repetir a validação local: `npm ci`, `npm run generate:social`, `npm run 
 - `/v/[codigo]`: produtos de cada conteúdo publicado.
 - `/colecao/[slug]`: coleções navegáveis.
 
-As rotas `/admin/login` e `/admin` oferecem login e dashboard real protegidos por Supabase Auth + RLS. Não aparecem na navegação pública nem no sitemap e têm noindex/nofollow. O painel ainda não possui CRUD; consulte [Auth administrativo](docs/admin-auth.md).
+As rotas `/admin/login` e `/admin` oferecem login e dashboard real protegidos por Supabase Auth + RLS. Não aparecem na navegação pública nem no sitemap e têm noindex/nofollow. O painel oferece CRUD de produtos; consulte [produtos administrativos](docs/admin-products.md) e [Auth administrativo](docs/admin-auth.md).
 
 ## Onde editar
 
@@ -71,7 +71,7 @@ O banco Supabase foi preparado na Etapa 9. Há leitura pública no runtime Next.
 
 `npm run check:data-parity` compara as duas fontes usando as variáveis locais (aceita `.env.local`, ignorado pelo Git). `npm run test:data-source` verifica validações sem rede. Veja [a configuração e validação completas](docs/data-source.md).
 
-**Atualização editorial:** banco → cache Next.js → visitante. O fallback temporal revalida após 300 segundos quando há acesso. A futura escrita administrativa autenticada deverá invalidar `public-catalog` para atualização imediata. Ainda não há CRUD ou endpoint de invalidação. Rollback editorial: `SITE_DATA_SOURCE=static`. Veja [arquitetura dinâmica](docs/dynamic-site.md).
+**Atualização editorial:** banco → cache Next.js → visitante. O fallback temporal revalida após 300 segundos quando há acesso. As Server Actions autenticadas do CRUD de produtos invalidam `public-catalog` com updateTag após commit. Não há endpoint público de invalidação. Rollback editorial: `SITE_DATA_SOURCE=static`. Veja [arquitetura dinâmica](docs/dynamic-site.md).
 
 **Limitação editorial:** o gerador social ainda usa `data.ts`. Antes de o futuro admin se tornar a fonte editorial exclusiva, ele deverá consumir o mesmo snapshot Supabase ou um derivado, para atualizar Open Graph junto com nomes/capas/produtos. Até lá, mantenha paridade editorial e regenere os assets locais.
 

@@ -1,3 +1,5 @@
+> Atualização Etapa 13: as Server Actions do CRUD de produtos já invalidam public-catalog após commit; veja [admin-products.md](admin-products.md). Os itens de invalidação futura abaixo registram a decisão da Etapa 12.
+
 # Catálogo dinâmico/cacheado — Etapa 12
 
 Antes: Supabase → build → HTML exportado → usuário.
