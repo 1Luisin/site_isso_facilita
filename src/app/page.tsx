@@ -1,3 +1,4 @@
+import { contentTypeLabel } from "@/lib/content-types";
 import Link from "next/link";
 import Image from "next/image";
 import { site, pageMetadata } from "@/lib/site";
@@ -34,7 +35,7 @@ export default async function Home() {
           <p>
             Coisas úteis, bonitas e com aquele toque de carinho.
             <br className="desktop-break" /> Encontre aqui os favoritos que você
-            viu nos nossos vídeos.
+            viu nas nossas publicações.
           </p>
           <Link className="primary-button" href="#catalogo">
             Explorar os achadinhos <span>↗</span>
@@ -75,11 +76,11 @@ export default async function Home() {
           <div>
             <span className="eyebrow">VIU NO FEED? TÁ AQUI!</span>
             <h2>
-              Achadinhos do último vídeo <span>✿</span>
+              Achadinhos do conteúdo em destaque <span>✿</span>
             </h2>
           </div>
           <Link className="text-link" href={"/v/" + featuredContent.code}>
-            Ver vídeo #{featuredContent.code} ↗
+            Ver {contentTypeLabel(featuredContent.contentType)} #{featuredContent.code} ↗
           </Link>
         </div>
         <div className="video-caption">
@@ -116,7 +117,7 @@ export default async function Home() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">DO FEED PARA O SEU CANTINHO</span>
-            <h2>Encontre pelo vídeo</h2>
+            <h2>Encontre pela publicação</h2>
           </div>
         </div>
         <div className="video-features">
@@ -126,7 +127,7 @@ export default async function Home() {
                 <Link
                   className="video-cover"
                   href={"/v/" + v.code}
-                  aria-label={`Ver produtos do ${v.contentType === "video" ? "vídeo" : "carrossel"} #${v.code}`}
+                  aria-label={`Ver produtos do ${contentTypeLabel(v.contentType)} #${v.code}`}
                 >
                   <picture>
                     <source
@@ -136,7 +137,7 @@ export default async function Home() {
                     />
                     <Image
                       src={v.cover}
-                      alt={`${v.title} — capa do ${v.contentType === "video" ? "vídeo" : "carrossel"} #${v.code}`}
+                      alt={`${v.title} — capa do ${contentTypeLabel(v.contentType)} #${v.code}`}
                       width={1080}
                       height={1350}
                       sizes="(max-width: 580px) calc(100vw - 38px), 280px"
@@ -149,10 +150,10 @@ export default async function Home() {
                 <h3>{v.title}</h3>
                 <p>{v.description}</p>
                 <p className="muted">
-                  {productsBySlugs(snapshot, v.slugs).length} achadinhos neste {v.contentType === "video" ? "vídeo" : "carrossel"}
+                  {productsBySlugs(snapshot, v.slugs).length} achadinhos neste {contentTypeLabel(v.contentType)}
                 </p>
                 <Link className="primary-button" href={"/v/" + v.code}>
-                  Ver produtos do {v.contentType === "video" ? "vídeo" : "carrossel"} ↗
+                  Ver produtos do {contentTypeLabel(v.contentType)} ↗
                 </Link>
                 <div
                   className="video-social-links"
@@ -167,6 +168,7 @@ export default async function Home() {
                       Ver no Instagram ↗
                     </a>
                   )}
+                  {v.links.youtube && <a href={v.links.youtube} target="_blank" rel="noopener noreferrer">Ver no YouTube ↗</a>}
                   {v.links.tiktok && (
                     <a
                       href={v.links.tiktok}

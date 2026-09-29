@@ -36,7 +36,7 @@ export function rasterDimensions(bytes: Uint8Array, type: string) {
   return {width,height};
 }
 
-export async function processProductImage(file: File) {
+async function processImage(file: File, bounds: readonly [number,number,number,number]) {
   validateImageFile(file);
   const bytes=new Uint8Array(await file.arrayBuffer());
   rasterDimensions(bytes,file.type);
@@ -44,8 +44,8 @@ export async function processProductImage(file: File) {
   try { bitmap=await createImageBitmap(file, {imageOrientation:"from-image"}); }
   catch { throw new Error("Não foi possível processar esta imagem."); }
   try {
-    const encode=async(limit:number)=>{
-      const {width,height}=fitImage(bitmap.width,bitmap.height,limit);
+    const encode=async(limit:number,heightLimit:number)=>{
+      const {width,height}=fitImage(bitmap.width,bitmap.height,limit,heightLimit);
       const canvas=document.createElement("canvas"); canvas.width=width; canvas.height=height;
       try {
         const context=canvas.getContext("2d",{alpha:true});
@@ -56,6 +56,9 @@ export async function processProductImage(file: File) {
         return blob;
       } finally {canvas.width=0;canvas.height=0;}
     };
-    return {main:await encode(900),mobile:await encode(480)};
+    return {main:await encode(bounds[0],bounds[1]),mobile:await encode(bounds[2],bounds[3])};
   } finally {bitmap.close();}
 }
+
+export const processProductImage=(file:File)=>processImage(file,[900,900,480,480]);
+export const processContentCover=(file:File)=>processImage(file,[1080,1350,540,675]);

@@ -13,10 +13,10 @@ export async function uploadPair(keys: {main:string;mobile:string}, blobs: {main
     attempted.push(keys.mobile); await transfer.upload(keys.mobile,blobs.mobile);
     const result=await transfer.associate();
     if(result.ok)return result;
-    try {await transfer.cleanup(attempted);} catch {return {ok:false,message:result.message+" A limpeza não foi confirmada; reabra o produto antes de tentar novamente."};}
+    try {await transfer.cleanup(attempted);} catch {return {ok:false,message:result.message+" A limpeza não foi confirmada; reabra o item antes de tentar novamente."};}
     return result;
   } catch {
-    try {await transfer.cleanup(attempted);} catch {return {ok:false,message:"Operação interrompida. Reabra o produto para verificar se a imagem foi salva; a limpeza não foi confirmada."};}
+    try {await transfer.cleanup(attempted);} catch {return {ok:false,message:"Operação interrompida. Reabra o item para verificar se a imagem foi salva; a limpeza não foi confirmada."};}
     return {ok:false,message:"Não foi possível enviar a imagem. Confira a conexão e tente novamente."};
   }
 }

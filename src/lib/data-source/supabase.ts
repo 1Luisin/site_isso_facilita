@@ -3,7 +3,7 @@ import { createPublicServerClient } from "../supabase/public.ts";
 import { productPresentation } from "./presentation.ts";
 import type { Tables } from "../supabase/database.types.ts";
 import type { PublicCatalogSnapshot, Content } from "./types.ts";
-import { mediaUrl } from "../product-media/paths.ts";
+import { mediaUrl, coverUrl } from "../product-media/paths.ts";
 import { publicSupabaseConfig } from "../supabase/public.ts";
 
 export async function getSupabaseSnapshot(): Promise<PublicCatalogSnapshot> {
@@ -75,7 +75,7 @@ export async function getSupabaseSnapshot(): Promise<PublicCatalogSnapshot> {
     })),
     contents: contents.map(c => ({
       code:c.code, contentType:c.content_type as Content["contentType"], title:c.title, description:c.description ?? "",
-      cover:c.cover_path ?? undefined, mobileCover:c.mobile_cover_path ?? undefined,
+      cover:c.cover_path ? coverUrl(publicSupabaseConfig().url,c.cover_storage_bucket,c.cover_path) : undefined, mobileCover:c.mobile_cover_path ? coverUrl(publicSupabaseConfig().url,c.cover_storage_bucket,c.mobile_cover_path) : undefined,
       links:Object.fromEntries(contentLinks.filter(l => l.content_id === c.id).map(l => [l.platform,l.url])),
       slugs:contentProducts.filter(r => r.content_id === c.id).sort((a,b) => a.sort_order-b.sort_order).map(r => slugFor(r.product_id)),
     })),

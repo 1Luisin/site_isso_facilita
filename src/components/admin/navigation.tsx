@@ -9,7 +9,8 @@ export function AdminNav() {
   return <nav className="admin-nav" aria-label="Navegação administrativa">
     <Link href="/admin" aria-current={path==="/admin"?"page":undefined}>Dashboard</Link>
     <Link href="/admin/produtos" aria-current={path.startsWith("/admin/produtos")?"page":undefined}>Produtos</Link>
-    {["Conteúdos","Coleções","Categorias"].map(label=><button key={label} disabled>{label}<small>em breve</small></button>)}
+    <Link href="/admin/conteudos" aria-current={path.startsWith("/admin/conteudos")?"page":undefined}>Conteúdos</Link>
+    {["Coleções","Categorias"].map(label=><button key={label} disabled>{label}<small>em breve</small></button>)}
   </nav>;
 }
 export function ProductAccess({children}:{children:ReactNode}) {

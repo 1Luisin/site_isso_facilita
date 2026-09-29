@@ -54,7 +54,7 @@ export default async function RootLayout({
           </Link>
           <nav aria-label="Navegação principal">
             <Link href="/#catalogo">Achadinhos</Link>
-            <Link href="/#videos">Dos vídeos</Link>
+            <Link href="/#videos">Dos conteúdos</Link>
             <Link href="/#colecoes">Coleções</Link>
           </nav>
           <span className="header-note">feito com carinho ♡</span>

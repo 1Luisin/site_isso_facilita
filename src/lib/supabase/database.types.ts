@@ -222,6 +222,7 @@ export type Database = {
           code: string
           content_type: string
           cover_path: string | null
+          cover_storage_bucket: string | null
           created_at: string
           description: string | null
           id: string
@@ -235,6 +236,7 @@ export type Database = {
           code: string
           content_type: string
           cover_path?: string | null
+          cover_storage_bucket?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -248,6 +250,7 @@ export type Database = {
           code?: string
           content_type?: string
           cover_path?: string | null
+          cover_storage_bucket?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -507,13 +510,43 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_delete_content: {
+        Args: { p_expected_updated_at: string; p_id: string }
+        Returns: Json
+      }
       admin_delete_product: {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: string
       }
+      admin_feature_content: {
+        Args: {
+          p_expected_featured_id: string
+          p_expected_updated_at: string
+          p_id: string
+        }
+        Returns: string
+      }
+      admin_remove_content_cover: {
+        Args: { p_expected_updated_at: string; p_id: string }
+        Returns: Json
+      }
       admin_remove_product_image: {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: Json
+      }
+      admin_save_content: {
+        Args: {
+          p_code: string
+          p_description: string
+          p_expected_updated_at: string | null
+          p_id: string | null
+          p_links: Json
+          p_products: string[]
+          p_published: boolean
+          p_title: string
+          p_type: string
+        }
+        Returns: string
       }
       admin_save_product: {
         Args: {
@@ -521,7 +554,6 @@ export type Database = {
           p_category_id: string
           p_collection_ids: string[]
           p_description: string
-          // Nullable when creating a draft (Postgres RPC arguments allow NULL).
           p_expected_updated_at: string | null
           p_id: string | null
           p_name: string
@@ -529,6 +561,16 @@ export type Database = {
           p_slug: string
         }
         Returns: string
+      }
+      admin_set_content_cover: {
+        Args: {
+          p_bucket: string
+          p_expected_updated_at: string
+          p_id: string
+          p_main: string
+          p_mobile: string
+        }
+        Returns: Json
       }
       admin_set_product_image: {
         Args: {

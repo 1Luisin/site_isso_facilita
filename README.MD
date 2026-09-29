@@ -112,3 +112,7 @@ locais antigas continuam válidas. Não há nova variável de ambiente. Veja
 [Storage de produtos, permissões e compensação de falhas](docs/product-storage.md).
 
 Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` para habilitar o login em `/admin/login`. São variáveis públicas diferentes das usadas pelo catálogo no build; use somente publishable key. Sem elas, o build passa e o admin indica Auth não configurado. Mantenha signups desligados no Dashboard Supabase. O primeiro owner é criado por bootstrap privilegiado; a interface não cria usuários nem altera roles. Veja [arquitetura, permissões e validações](docs/admin-auth.md).
+
+### Administração de conteúdos
+
+`/admin/conteudos` permite criar rascunhos, ordenar produtos, cadastrar links sociais, enviar capa WebP e publicar sem rebuild. Reel / Short usa o tipo `short`; não há upload de MP4. Apenas owner pode definir o destaque ou excluir. Veja [docs/admin-contents.md](docs/admin-contents.md) para RPCs, RLS, Storage e testes.
