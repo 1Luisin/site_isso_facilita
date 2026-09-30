@@ -514,6 +514,10 @@ export type Database = {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: Json
       }
+      admin_delete_editorial_group: {
+        Args: { p_expected_updated_at: string; p_id: string; p_kind: string }
+        Returns: string
+      }
       admin_delete_product: {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: string
@@ -533,6 +537,37 @@ export type Database = {
       admin_remove_product_image: {
         Args: { p_expected_updated_at: string; p_id: string }
         Returns: Json
+      }
+      admin_reorder_editorial_groups: {
+        Args: { p_ids: string[]; p_kind: string; p_versions: string[] }
+        Returns: boolean
+      }
+      admin_save_category: {
+        Args: {
+          p_active: boolean
+          p_description: string
+          p_expected_updated_at: string | null
+          p_id: string | null
+          p_name: string
+          p_slug: string
+          p_sort_order: number
+          p_symbol: string
+        }
+        Returns: string
+      }
+      admin_save_collection: {
+        Args: {
+          p_description: string
+          p_expected_updated_at: string | null
+          p_id: string | null
+          p_name: string
+          p_products: string[]
+          p_published: boolean
+          p_slug: string
+          p_sort_order: number
+          p_style: number
+        }
+        Returns: string
       }
       admin_save_content: {
         Args: {

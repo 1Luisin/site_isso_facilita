@@ -66,7 +66,8 @@
 .admin-content-products li > div { min-width: 0; overflow-wrap: anywhere; flex: 1 1 150px; }
 .admin-content-products img, .admin-product-picker img { object-fit: contain; }
 .admin-content-products small, .admin-product-picker small { display: block; overflow-wrap: anywhere; }
-.admin-product-picker { display: grid; gap: 8px; max-height: 300px; overflow: auto; margin-top: 12px; }
+.admin-product-picker { display: grid; grid-auto-rows: max-content; align-content: start; gap: 8px; max-height: 300px; overflow: auto; margin-top: 12px; }
 .admin-product-picker button { display: flex; align-items: center; text-align: left; gap: 10px; padding: 10px; max-width: 100%; }
 .admin-product-picker span { min-width: 0; overflow-wrap: anywhere; }
+.admin-product-picker img { flex-shrink: 0; }
 @media(max-width: 430px) { .admin-content-list article { flex-direction: column; } }

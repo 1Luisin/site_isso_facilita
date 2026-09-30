@@ -47,7 +47,7 @@ export default async function CollectionPage({
       <div className="page-heading">
         <span>♡</span>
         <h1>{title}</h1>
-        <p>Pequenas descobertas que combinam entre si — e com você.</p>
+        <p>{collection.description || "Pequenas descobertas que combinam entre si — e com você."}</p>
       </div>
       <ProductGrid pageType="collection"
         items={productsBySlugs(snapshot, collection.slugs)}

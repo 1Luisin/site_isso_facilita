@@ -116,3 +116,7 @@ Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` pa
 ### Administração de conteúdos
 
 `/admin/conteudos` permite criar rascunhos, ordenar produtos, cadastrar links sociais, enviar capa WebP e publicar sem rebuild. Reel / Short usa o tipo `short`; não há upload de MP4. Apenas owner pode definir o destaque ou excluir. Veja [docs/admin-contents.md](docs/admin-contents.md) para RPCs, RLS, Storage e testes.
+
+### Categorias e coleções
+
+`/admin/categorias` e `/admin/colecoes` permitem edição, ordenação e ativação/publicação com atualização imediata do cache público. Exclusão é exclusiva do owner, respeitando dependências. Consulte [docs/admin-categories-collections.md](docs/admin-categories-collections.md).

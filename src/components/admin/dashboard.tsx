@@ -55,6 +55,6 @@ export function AdminDashboard() {
     <div className="admin-heading"><div><span className="eyebrow">SEU CANTINHO DE CURADORIA</span><h1>Olá, {access.profile.display_name || "Administrador"} ♡</h1><p>Seu acesso: <strong>{access.profile.role}</strong></p></div><button className="primary-button" onClick={() => void signOut()}>Sair</button></div>
     <AdminNav />
     <DashboardData />
-    <aside className="admin-card admin-note"><h2>Um passo de cada vez ✿</h2><p>Este é o resumo real da sua curadoria. Produtos já podem ser editados pelo menu. Conteúdos, coleções e categorias serão disponibilizados nas próximas etapas.</p></aside>
+    <aside className="admin-card admin-note"><h2>Um passo de cada vez ✿</h2><p>Este é o resumo da sua curadoria. Use o menu para administrar produtos, conteúdos, coleções e categorias.</p></aside>
   </section>;
 }
