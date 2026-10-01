@@ -15,7 +15,8 @@
     "prebuild": "node scripts/generate-public-assets.mjs",
     "start": "next start",
     "test:runtime": "node --conditions=react-server scripts/test-runtime-routes.mjs",
-    "test:products-runtime": "node --conditions=react-server scripts/test-products-runtime.mjs"
+    "test:products-runtime": "node --conditions=react-server scripts/test-products-runtime.mjs",
+    "test:i18n": "node --test scripts/i18n.test.mjs"
   },
   "dependencies": {
     "@next/third-parties": "16.3.6",

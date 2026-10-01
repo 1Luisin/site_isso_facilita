@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localizedPath, type Language } from "./i18n";
 
 function resolveSiteUrl(): URL {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -61,14 +62,17 @@ export function pageMetadata({
   path,
   image = site.socialImage,
   imageAlt = site.name,
+  language = "pt",
 }: {
   title: string;
   description: string;
   path: string;
   image?: string;
   imageAlt?: string;
+  language?: Language;
 }): Metadata {
-  const fullTitle = title === site.title ? title : `${title} · ${site.name}`;
+  const fullTitle = title.startsWith(`${site.name} ·`) ? title : `${title} · ${site.name}`;
+  const plainPath = path === "/en" ? "/" : path.replace(/^\/en\//, "/");
   const socialImage = {
     url: absoluteUrl(image),
     width: 1200,
@@ -79,11 +83,11 @@ export function pageMetadata({
   return {
     title: { absolute: fullTitle },
     description,
-    alternates: { canonical: absoluteUrl(path) },
+    alternates: { canonical: absoluteUrl(path), languages: {"pt-BR":absoluteUrl(plainPath), "en-US":absoluteUrl(localizedPath(plainPath,"en")), "x-default":absoluteUrl(plainPath)} },
     openGraph: {
       type: "website",
       siteName: site.name,
-      locale: site.locale,
+      locale: language === "en" ? "en_US" : site.locale,
       title: fullTitle,
       description,
       url: absoluteUrl(path),

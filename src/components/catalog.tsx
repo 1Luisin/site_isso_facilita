@@ -1,26 +1,27 @@
 "use client";
+import { translate, localizedPath, findsLabel, type Language } from "@/lib/i18n";
 import { useState } from "react";
 import Link from "next/link";
 import type { Category, Collection, Product } from "@/lib/data-source/types";
 import { ProductArt } from "./art";
 import { AffiliateLink } from "./affiliate-link";
 import type { AnalyticsContext } from "@/lib/analytics";
-export function ProductCard({ product, pageType, contentCode }: { product: Product } & AnalyticsContext) {
+export function ProductCard({ product, pageType, contentCode, language = "pt" }: { product: Product; language?: Language } & AnalyticsContext) {
+ const t = (text:string) => translate(language,text);
   const [favorite, setFavorite] = useState(false);
   return (
     <article className="product-card">
       <div className="card-image">
         <Link
-          href={"/produto/" + product.slug}
-          aria-label={"Conhecer " + product.name}
+          href={localizedPath("/produto/" + product.slug, language)}
+          aria-label={(language === "en" ? "View " : "Conhecer ") + product.name}
         >
           <ProductArt product={product} />
         </Link>
         <button
           className={"favorite " + (favorite ? "selected" : "")}
           aria-label={
-            (favorite ? "Remover dos" : "Adicionar aos") +
-            " favoritos: " +
+            (language === "en" ? (favorite ? "Remove from favorites: " : "Add to favorites: ") : (favorite ? "Remover dos favoritos: " : "Adicionar aos favoritos: ")) +
             product.name
           }
           aria-pressed={favorite}
@@ -34,32 +35,32 @@ export function ProductCard({ product, pageType, contentCode }: { product: Produ
           {product.categoryName}
         </span>
         <h3>
-          <Link href={"/produto/" + product.slug}>{product.name}</Link>
+          <Link href={localizedPath("/produto/" + product.slug, language)}>{product.name}</Link>
         </h3>
         <AffiliateLink className="shop-button" product={product} pageType={pageType} contentCode={contentCode}>
-          Ver preço na loja <span>↗</span>
+          {t("Ver preço na loja")}{" "}<span>↗</span>
         </AffiliateLink>
       </div>
     </article>
   );
 }
-export function ProductGrid({ items, pageType, contentCode }: { items: Product[] } & AnalyticsContext) {
+export function ProductGrid({ items, pageType, contentCode, language = "pt" }: { items: Product[]; language?: Language } & AnalyticsContext) {
+ const t = (text:string) => translate(language,text);
   if (!items.length) {
     return (
       <div className="empty">
         <span>✿</span>
-        <h3>Novos achadinhos em breve</h3>
-        <p>Enquanto isso, explore as outras seleções.</p>
-        <Link href="/#catalogo" className="text-link">
-          Ver todos os achadinhos ↗
-        </Link>
+        <h3>{t("Novos achadinhos em breve")}</h3>
+        <p>{t("Enquanto isso, explore as outras seleções.")}</p>
+        <Link href={localizedPath("/#catalogo", language)} className="text-link">
+          {t("Ver todos os achadinhos ↗")}{" "}</Link>
       </div>
     );
   }
   return (
     <div className="product-grid">
       {items.map((p) => (
-        <ProductCard product={p} key={p.slug} pageType={pageType} contentCode={contentCode} />
+        <ProductCard language={language} product={p} key={p.slug} pageType={pageType} contentCode={contentCode} />
       ))}
     </div>
   );
@@ -69,7 +70,8 @@ const normalize = (s: string) =>
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
-export function Catalog({ items, categories, collections, pageType, contentCode }: { items: Product[]; categories: Category[]; collections: Collection[] } & AnalyticsContext) {
+export function Catalog({ items, categories, collections, pageType, contentCode, language = "pt" }: { items: Product[]; categories: Category[]; collections: Collection[]; language?: Language } & AnalyticsContext) {
+ const t = (text:string) => translate(language,text);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [collection, setCollection] = useState("");
@@ -83,12 +85,12 @@ export function Catalog({ items, categories, collections, pageType, contentCode 
     <section id="catalogo" className="section">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">ESCOLHIDOS COM CARINHO</span>
+          <span className="eyebrow">{t("ESCOLHIDOS COM CARINHO")}</span>
           <h2>
-            Encontre seu próximo favorito <span>♡</span>
+            {t("Encontre seu próximo favorito")}{" "}<span>♡</span>
           </h2>
         </div>
-        <span className="muted">{filtered.length} achadinhos</span>
+        <span className="muted">{findsLabel(filtered.length, language)}</span>
       </div>
       <label className="search">
         <span aria-hidden="true">⌕</span>
@@ -96,18 +98,17 @@ export function Catalog({ items, categories, collections, pageType, contentCode 
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="O que facilitaria o seu dia?"
-          aria-label="Buscar produtos"
+          placeholder={t("O que facilitaria o seu dia?")}
+          aria-label={t("Buscar produtos")}
         />
-        <span className="search-hint">um mimo, uma ideia...</span>
+        <span className="search-hint">{t("um mimo, uma ideia...")}</span>
       </label>
-      <div className="filter-row" aria-label="Filtrar por categoria">
+      <div className="filter-row" aria-label={t("Filtrar por categoria")}>
         <button
           className={!category ? "active" : ""}
           onClick={() => setCategory("")}
         >
-          Todos os achadinhos
-        </button>
+          {t("Todos os achadinhos")}{" "}</button>
         {categories
           .filter((c) => items.some((p) => p.category === c.slug))
           .map((c) => (
@@ -121,13 +122,13 @@ export function Catalog({ items, categories, collections, pageType, contentCode 
           ))}
       </div>
       <div className="collection-filter">
-        <label htmlFor="collection">Sua coleção:</label>
+        <label htmlFor="collection">{t("Sua coleção:")}</label>
         <select
           id="collection"
           value={collection}
           onChange={(e) => setCollection(e.target.value)}
         >
-          <option value="">Todas as coleções</option>
+          <option value="">{t("Todas as coleções")}</option>
           {collections
             .filter((c) => items.some((p) => p.collections.includes(c.name)))
             .map((c) => (
@@ -145,25 +146,23 @@ export function Catalog({ items, categories, collections, pageType, contentCode 
               setCollection("");
             }}
           >
-            Limpar filtros ×
-          </button>
+            {t("Limpar filtros ×")}{" "}</button>
         )}
       </div>
       {filtered.length ? (
-        <ProductGrid items={filtered} pageType={pageType} contentCode={contentCode} />
+        <ProductGrid language={language} items={filtered} pageType={pageType} contentCode={contentCode} />
       ) : (
         <div className="empty">
           <span>✿</span>
-          <h3>Nenhum achadinho por aqui ainda</h3>
+          <h3>{t("Nenhum achadinho por aqui ainda")}</h3>
           <p>
             {items.length
-              ? "Tente outra palavra ou limpe os filtros."
-              : "Novos achadinhos chegam em breve. Explore as outras seleções."}
+              ? t("Tente outra palavra ou limpe os filtros.")
+              : t("Novos achadinhos chegam em breve. Explore as outras seleções.")}
           </p>
           {!items.length && (
-            <Link href="/#catalogo" className="text-link">
-              Ver todos os achadinhos ↗
-            </Link>
+            <Link href={localizedPath("/#catalogo", language)} className="text-link">
+              {t("Ver todos os achadinhos ↗")}{" "}</Link>
           )}
         </div>
       )}

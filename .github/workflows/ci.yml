@@ -30,6 +30,7 @@ jobs:
       - run: npm ci
       - run: npm run test:data-source
       - run: npm run test:admin
+      - run: npm run test:i18n
       - run: npm run lint
       - run: npm run check:social
       - run: npm run build

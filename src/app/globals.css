@@ -1310,3 +1310,14 @@ footer small {
     transition: none !important;
   }
 }
+.header-tools { display: flex; align-items: center; gap: 16px; }
+.language-switcher { display: flex; align-items: center; gap: 7px; }
+.header .language-switcher { gap: 7px; }
+.header .language-switcher a { border: 0; background: none; padding: 2px; }
+.language-choice { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; padding: 2px; min-width: 44px; text-decoration: none; border-radius: 24px; }
+.flag-circle { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid #decbd1; border-radius: 50%; background: var(--paper); transition: border-color .15s, background-color .15s; }
+.flag-circle svg { width: 25px; height: 18px; border-radius: 2px; }
+.language-choice[aria-current="true"] .flag-circle { border-color: var(--rose); background: var(--pink); box-shadow: 0 0 0 2px #f5e7eb; }
+.language-choice:hover .flag-circle { border-color: var(--rose); }
+.language-abbreviation { font: 600 10px Arial, sans-serif; letter-spacing: .06em; }
+@media (max-width: 800px) { .header-tools { justify-content: center; } .header .language-switcher a { border: 0; background: none; padding: 2px; } }

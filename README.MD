@@ -120,3 +120,6 @@ Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` pa
 ### Categorias e coleções
 
 `/admin/categorias` e `/admin/colecoes` permitem edição, ordenação e ativação/publicação com atualização imediata do cache público. Exclusão é exclusiva do owner, respeitando dependências. Consulte [docs/admin-categories-collections.md](docs/admin-categories-collections.md).
+# Idiomas do site público
+
+O cabeçalho oferece Português (Brasil) e English (United States). Inglês usa `/en`; o admin permanece em português. Traduções revisadas, manutenção dos textos editoriais e SEO por idioma estão descritos em [docs/languages.md](docs/languages.md). Valide com `npm run test:i18n`.
