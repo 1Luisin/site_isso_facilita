@@ -71,3 +71,72 @@
 .admin-product-picker span { min-width: 0; overflow-wrap: anywhere; }
 .admin-product-picker img { flex-shrink: 0; }
 @media(max-width: 430px) { .admin-content-list article { flex-direction: column; } }
+
+/* Editorial groups: compact lists and clear, touch-friendly controls. */
+.admin-groups button, .admin-group-editor button:not(.primary-button), .admin-edit-link {
+  border: 1px solid var(--line); border-radius: 12px; background: #fff;
+  color: var(--ink); font: inherit; padding: 10px 16px; cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.admin-groups button:hover:not(:disabled), .admin-group-editor button:not(.primary-button):hover:not(:disabled), .admin-edit-link:hover { background: var(--pink); border-color: #cf9aab; }
+.admin-groups :is(button,a,input,select):focus-visible, .admin-group-editor :is(button,a,input,select,textarea):focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.admin-groups button:disabled, .admin-group-editor button:disabled { opacity: .4; }
+.admin-group-filters.admin-product-form { max-width: none; display: grid; grid-template-columns: minmax(0,2fr) minmax(180px,1fr); gap: 16px 24px; padding: 22px 24px; }
+.admin-group-filters label { font-weight: 600; font-size: 13px; margin-bottom: 8px; }
+.admin-group-filters p { grid-column: 1/-1; margin: 0; font-size: 12px; color: var(--muted); }
+.admin-list-count { color: var(--muted); font-size: 13px; margin: 20px 0 12px; }
+.admin-group-feedback:empty { display: none; }
+.admin-content-list .admin-group-card { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; align-items: center; gap: 20px; padding: 24px; }
+.admin-group-symbol { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #f8edf1; color: var(--rose); font-size: 27px; }
+.admin-group-symbol.admin-style-1 { background: #f4f0e8; color: #877754; }
+.admin-group-symbol.admin-style-2 { background: #fff0e6; color: #94633d; }
+.admin-group-symbol.admin-style-3 { background: #f1edf7; color: #7b658e; }
+.admin-group-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.admin-group-title h2 { font-size: 25px; margin: 0; letter-spacing: -.5px; }
+.admin-status { display: inline-flex; align-items: center; border: 1px solid #e5dfe1; border-radius: 30px; padding: 4px 10px; font: 500 11px/1.5 Arial,sans-serif; background: #f7f4f5; color: #75646b; white-space: nowrap; }
+.admin-status.is-live { background: #eef5ed; color: #436343; border-color: #d8e6d5; }
+.admin-group-slug { margin: 6px 0 12px; font-size: 12px; color: var(--muted); }
+.admin-group-details { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; }
+.admin-group-details strong { font-weight: 600; }
+.admin-group-caption { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+.admin-group-controls { display: flex; align-items: center; gap: 16px; }
+.admin-reorder { display: flex; gap: 6px; }
+.admin-reorder button { width: 44px; padding: 8px; }
+.admin-edit-link { display: inline-flex; gap: 18px; align-items: center; font-size: 13px; font-weight: 600; min-height: 44px; }
+.admin-group-editor .admin-product-form { max-width: 900px; padding: 32px; }
+.admin-group-editor .admin-product-form > fieldset { gap: 10px; padding: 0 0 28px; margin: 0 0 28px; border-bottom: 1px solid var(--line); }
+.admin-group-editor .admin-product-form > fieldset:last-child { margin: 0; padding-bottom: 0; border: 0; }
+.admin-group-editor legend { font-size: 18px; margin-bottom: 18px; }
+.admin-group-editor label { font-size: 13px; font-weight: 600; margin-top: 10px; }
+.admin-group-editor small, .admin-field-hint { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.admin-field-hint { margin: 0; }
+.admin-group-editor .admin-content-products { margin: 8px 0 20px; display: grid; gap: 8px; }
+.admin-group-editor .admin-content-products li { flex-wrap: nowrap; border: 1px solid var(--line); border-radius: 14px; background: #fffcfd; padding: 12px; gap: 12px; }
+.admin-item-number { font-size: 11px; color: var(--muted); min-width: 18px; text-align: center; }
+.admin-group-editor .admin-content-products img { flex-shrink: 0; border-radius: 8px; background: #fff; }
+.admin-group-editor .admin-content-products strong { font-size: 13px; line-height: 1.5; }
+.admin-group-editor .admin-content-products .admin-item-actions { flex: 0 0 auto; justify-content: flex-end; gap: 6px; }
+.admin-item-actions button { font-size: 12px !important; padding: 8px 12px !important; }
+.admin-group-editor .admin-product-picker { border: 1px solid var(--line); border-radius: 16px; padding: 10px; background: #faf6f7; scrollbar-width: thin; }
+.admin-group-editor .admin-product-picker button { padding: 12px; gap: 14px; border-radius: 12px; }
+.admin-group-editor .admin-product-picker strong { font-size: 13px; font-weight: 600; }
+.admin-add-icon { margin-left: auto; flex-shrink: 0; color: var(--rose); font-size: 22px; padding: 0 6px; }
+.admin-group-editor .admin-publication .admin-actions { justify-content: flex-start; margin-top: 10px; }
+.admin-group-editor .admin-delete { max-width: 900px; background: #fffafa; }
+.admin-group-editor .admin-delete h2 { font-size: 24px; }
+.admin-group-editor .admin-delete input { margin: 10px 0 16px; }
+@media(max-width:760px) {
+ .admin-content-list .admin-group-card { grid-template-columns: 44px minmax(0,1fr); gap: 14px; padding: 20px; }
+ .admin-group-symbol { width:44px; height:44px; font-size:22px; border-radius:12px; }
+ .admin-group-controls { grid-column: 1/-1; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--line); }
+ .admin-group-title h2 { font-size:23px; }
+ .admin-group-editor .admin-content-products li { flex-wrap: wrap; }
+ .admin-group-editor .admin-content-products .admin-item-actions { flex-basis: 100%; border-top: 1px solid var(--line); padding-top: 10px; }
+}
+@media(max-width:480px) {
+ .admin-group-filters.admin-product-form { grid-template-columns: 1fr; padding: 20px; }
+ .admin-group-editor .admin-product-form { padding: 20px; }
+ .admin-group-editor .admin-content-products li > div:not(.admin-item-actions) { flex-basis: 130px; }
+ .admin-group-editor .admin-publication .admin-actions > button { width: 100%; justify-content: center; }
+ .admin-group-details { gap: 8px 12px; font-size:12px; }
+}
