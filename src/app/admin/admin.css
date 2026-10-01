@@ -140,3 +140,20 @@
  .admin-group-editor .admin-publication .admin-actions > button { width: 100%; justify-content: center; }
  .admin-group-details { gap: 8px 12px; font-size:12px; }
 }
+
+/* Content management shares the editorial controls with collections. */
+.admin-content-editor > .admin-card, .admin-content-editor > .admin-media { max-width: 900px; margin-top: 24px; }
+.admin-content-editor > .admin-card h2 { font-size: 26px; margin-top: 0; }
+.admin-content-editor .admin-feature-panel { background: #fff8fa; }
+.admin-content-editor .admin-delete button { color: #8c2948; border-color: #ddb6c2; }
+.admin-content-filters.admin-product-form { max-width: none; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 24px; align-items: end; }
+.admin-content-filters label, .admin-filter-options legend { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+.admin-filter-options { border: 0; margin: 0; padding: 0; min-width: 0; }
+.admin-filter-options > div { display: flex; gap: 6px; flex-wrap: wrap; }
+.admin-filter-options button[aria-pressed=true] { background: var(--pink); border-color: #c994a5; color: #8c2948; font-weight: 600; }
+.admin-content-card h2 { font-size: 26px; margin: 10px 0; }
+.admin-content-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.admin-content-card .admin-content-thumb { border-radius: 12px; background: #faf5f7; }
+.admin-content-card > div > span { color: var(--rose); font-size: 12px; font-weight: 600; }
+@media(max-width:760px) { .admin-content-filters.admin-product-form { grid-template-columns: 1fr; gap: 20px; } }
+@media(max-width:480px) { .admin-content-filters { padding: 20px; } .admin-filter-options button { padding: 10px 12px; font-size: 12px; } .admin-content-card h2 { font-size: 23px; } }
