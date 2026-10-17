@@ -15,8 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...publishedProducts.map(({ slug }) => `/produto/${slug}`),
     ...contents.map(({ code }) => `/v/${code}`),
   ];
-  return paths.flatMap((path) => [path, localizedPath(path,"en")].map(localPath => ({
-    url: absoluteUrl(localPath),
-    alternates: {languages: {"pt-BR":absoluteUrl(path),"en-US":absoluteUrl(localizedPath(path,"en"))}},
-  })));
+  return [
+    ...paths.flatMap((path) => [path, localizedPath(path,"en")].map(localPath => ({
+      url: absoluteUrl(localPath),
+      alternates: {languages: {"pt-BR":absoluteUrl(path),"en-US":absoluteUrl(localizedPath(path,"en"))}},
+    }))),
+    { url: absoluteUrl("/links") },
+  ];
 }
